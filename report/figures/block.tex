@@ -1,0 +1,39 @@
+% Block diagrams of the two systems (Fig. 1)
+\begin{tikzpicture}[
+  font=\scriptsize,
+  blk/.style={draw, rounded corners=2pt, align=center, minimum height=0.8cm, fill=blue!7},
+  cpu/.style={draw, rounded corners=2pt, align=center, fill=orange!12, minimum width=1.9cm},
+  ctr/.style={draw, rounded corners=2pt, align=center, fill=gray!12, minimum height=0.5cm},
+  arr/.style={-{Latex[length=1.6mm]}, thick},
+  lbl/.style={font=\tiny\ttfamily, fill=white, inner sep=1pt}]
+
+% ---------------- (a) Harvard ----------------
+\node[font=\small\bfseries] at (2.6,3.0) {(a) Harvard: \texttt{harvard\_top}};
+\node[cpu, minimum height=3.4cm] (core) at (0,0.4) {\texttt{cpu\_core}\\[2pt]single-cycle\\RV32I subset};
+\node[blk, minimum width=2.4cm] (imem) at (4.2,1.6) {\texttt{instr\_mem}\\256$\times$32 ROM};
+\node[blk, minimum width=2.4cm] (dec)  at (4.2,0.0) {\texttt{addr\_decoder}\\+ \texttt{rw\_ctrl}};
+\node[blk, minimum width=2.4cm] (dmem) at (4.2,-1.4) {\texttt{data\_mem}\\256$\times$32 RAM};
+\node[ctr] (out) at (6.3,0.0) {\texttt{out\_port}};
+\draw[arr] ([yshift=4pt]core.east |- imem.west) -- node[lbl,above]{i\_addr} ([yshift=4pt]imem.west);
+\draw[arr] ([yshift=-4pt]imem.west) -- node[lbl,below]{i\_rdata} ([yshift=-4pt]core.east |- imem.west);
+\draw[arr] ([yshift=4pt]core.east |- dec.west) -- node[lbl,above]{d\_addr, d\_wdata} ([yshift=4pt]dec.west);
+\draw[arr] ([yshift=-4pt]dec.west) -- node[lbl,below]{d\_rdata} ([yshift=-4pt]core.east |- dec.west);
+\draw[arr] (dec.south) -- node[lbl,right]{ram\_we} (dmem.north);
+\draw[arr] (dec.east) -- (out.west);
+\draw[dashed, gray] (2.7,0.8) -- (5.6,0.8) node[right, font=\tiny, text=gray]{separate ports};
+\node[ctr, minimum width=3.6cm] (pc) at (2.4,-2.5) {\texttt{perf\_counters}};
+\draw[arr] (core.south) |- (pc.west);
+
+% ---------------- (b) Shared memory ----------------
+\begin{scope}[xshift=9.6cm]
+\node[font=\small\bfseries] at (2.0,3.0) {(b) Baseline: \texttt{vn\_top}};
+\node[cpu, minimum height=3.4cm] (vcore) at (0,0.4) {\texttt{cpu\_core\_vn}\\[2pt]2-state FSM\\FETCH\_EXEC\\MEM};
+\node[blk, minimum width=2.6cm] (vdec) at (4.0,1.4) {address mux\\(+0x400 for data)};
+\node[blk, minimum width=2.6cm] (smem) at (4.0,-0.8) {\texttt{shared\_mem}\\512$\times$32\\code 0--255, data 256--511};
+\draw[arr] (vcore.east |- vdec.west) -- node[lbl,above]{m\_addr} (vdec.west);
+\draw[arr] (vdec.south) -- node[lbl,right]{single port} (smem.north);
+\draw[arr] (smem.west) -- node[lbl,below]{m\_rdata} (vcore.east |- smem.west);
+\node[ctr, minimum width=3.6cm] (vpc) at (2.4,-2.5) {\texttt{perf\_counters}};
+\draw[arr] (vcore.south) |- (vpc.west);
+\end{scope}
+\end{tikzpicture}

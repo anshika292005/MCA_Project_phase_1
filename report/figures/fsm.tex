@@ -1,0 +1,12 @@
+% Two-state controller of the shared-memory baseline (Fig. 3)
+\begin{tikzpicture}[
+  font=\scriptsize,
+  st/.style={draw, circle, thick, fill=orange!12, minimum size=1.55cm, align=center},
+  w/.style={-{Latex[length=1.6mm]}, thick}]
+\node[st] (fe) at (0,0) {FETCH\_\\EXEC\\[1pt]{\tiny bus = PC}};
+\node[st] (me) at (3.6,0) {MEM\\[1pt]{\tiny bus = data addr}};
+\draw[w] (-1.6,0) node[left]{rst} -- (fe);
+\draw[w] (fe) to[loop above, looseness=6] node[above, align=center]{ADD/SUB/AND/OR/ADDI,\\BEQ/BNE, EBREAK: 1 cycle} (fe);
+\draw[w] (fe) to[bend left=28] node[above, align=center]{LW / SW:\\latch instruction} (me);
+\draw[w] (me) to[bend left=28] node[below, align=center]{access done,\\PC $\leftarrow$ PC+4} (fe);
+\end{tikzpicture}

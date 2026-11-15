@@ -105,6 +105,7 @@ Measured by `make compare`; full table and discussion in [results/comparison.md]
 ## Report and video
 
 - Report PDF: [report/main.pdf](report/main.pdf)
+- Prototype Video: [Google Drive Folder](https://drive.google.com/drive/folders/1gFUfU14wTAQAbcvC8pDPiQS0-IFScr1h?usp=drive_link)
 
 
 

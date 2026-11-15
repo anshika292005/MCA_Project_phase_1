@@ -1,0 +1,33 @@
+% Single-cycle datapath of cpu_core with the LW path highlighted (Fig. 2)
+\begin{tikzpicture}[
+  font=\scriptsize,
+  u/.style={draw, rounded corners=1.5pt, align=center, minimum height=0.9cm, minimum width=0.95cm},
+  m/.style={u, fill=blue!7},
+  w/.style={-{Latex[length=1.4mm]}},
+  hot/.style={-{Latex[length=1.6mm]}, very thick, red!70!black},
+  t/.style={font=\tiny\ttfamily, inner sep=1pt}]
+\node[u] (pc) at (0,0) {PC};
+\node[m] (im) at (1.6,0) {instr\\mem};
+\node[u] (rf) at (3.3,0) {reg\\file};
+\node[u, minimum height=1.2cm] (alu) at (4.9,0) {ALU};
+\node[m] (dm) at (6.5,0) {data\\mem};
+\node[u, minimum width=0.45cm, minimum height=1.2cm] (mx) at (7.8,0) {M\\U\\X};
+\node[u, minimum height=0.6cm] (ctl) at (3.3,1.6) {control};
+\node[u, minimum height=0.6cm] (ig) at (3.3,-1.5) {imm\_gen};
+\node[u, minimum height=0.6cm, align=center] (nx) at (0,-1.5) {PC+4 /\\PC+imm};
+
+\draw[hot] (pc) -- node[t,above]{i\_addr} (im);
+\draw[hot] (im) -- node[t,above]{instr} (rf);
+\draw[hot] (rf) -- node[t,above]{rs1} (alu);
+\draw[hot] (alu) -- node[t,above]{d\_addr} (dm);
+\draw[hot] (dm) -- node[t,above]{rdata} (mx);
+\draw[hot] (mx.north) |- (2.6,2.3) node[t,above,pos=0.75]{write back to rd} |- ([yshift=0.2cm]rf.west);
+\draw[w] (im.south) |- (ig.west);
+\draw[w] (ig.east) -| node[t,right,pos=0.75]{imm} (alu.south);
+\draw[w] (im.north) |- (ctl.west);
+\draw[w] (ctl.east) -| node[t,right,pos=0.7]{alu\_op} (alu.north);
+\draw[w] (ctl.east) -| node[t,right,pos=0.6]{we/re} (dm.north);
+\draw[w] (alu.south east) |- ([yshift=-0.2cm]mx.south) -- (mx.south);
+\draw[w] (nx.north) -- (pc.south);
+\node[t, text=red!70!black, align=left, anchor=west, font=\tiny\itshape] at (5.6,-1.5) {LW: fetch and data read\\in one clock period};
+\end{tikzpicture}
