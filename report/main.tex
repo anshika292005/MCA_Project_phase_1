@@ -186,11 +186,13 @@ and a data access therefore never compete for a resource, and both complete in t
 \subsection{Single-cycle processor}
 \sig{cpu\_core} executes one instruction per clock period (Fig.~\ref{fig:datapath}). The program
 counter addresses the instruction ROM. The control unit decodes the opcode, \sig{funct3} and
-\sig{funct7} fields, the register file supplies two operands, and the ALU computes a result, an
-effective address or a branch comparison. For LW and SW the data port is used in the same period,
-and the result is written back on the next rising edge. Branches subtract the two operands and
-check the ALU zero flag. EBREAK freezes the program counter and asserts \sig{halt}. The core
-contains no memory of its own; it only drives the instruction and data ports.
+\sig{funct7} fields, generating control signals for register writes, ALU operation selection,
+memory read/write strobes, and branch decisions. The register file supplies two operands, and
+the ALU computes a result, an effective address or a branch comparison. For LW and SW the data
+port is accessed in the very same period, and the result is written back on the next rising edge.
+Branches subtract the two operands and evaluate the condition based on the ALU zero flag.
+EBREAK freezes the program counter and asserts \sig{halt}. The core contains no internal memory
+of its own; it orchestrates the datapath and drives the independent memory ports.
 
 \begin{figure}[t]
   \centering
