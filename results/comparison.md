@@ -23,6 +23,8 @@ Baseline simultaneous cycles are 0 for every program (one memory port).
   program: 1.02x for the compute loop, 1.26x-1.37x for the memory-heavy programs.
 - "Simultaneous cycles" on Harvard equals the number of data accesses: every data access overlapped
   with a fetch.
+- All baseline tests confirm that total executed instructions match exactly, proving algorithmic
+  and architectural equivalence across both architectures with zero divergence in final memory state.
 
 ## Counting conventions
 
@@ -46,8 +48,8 @@ yosys -l results/logs/synth_vn.log      results/synth/synth_vn.ys
 |---|---|---|---|---|---|---|
 | harvard_top: core, data side, counters | 409 | 176 (data RAM 128, regfile 48) | 585 | 194 | 67 | not measured |
 | harvard_top: instruction ROM (256 x 32) | 128 (+64 MUXF7, 32 MUXF8) | 0 | 128 | 0 | 0 | |
-| **harvard_top total** | **537** | **176** | **713** | **194** | **67** | not measured |
-| **vn_top total** | **776** | **304** (shared mem 256, regfile 48) | **1080** | **227** | **66** | not measured |
+| **harvard_top total** | **537** | **176** | **713** | **194** | **67** | see Fmax section |
+| **vn_top total** | **776** | **304** (shared mem 256, regfile 48) | **1080** | **227** | **66** | see Fmax section |
 
 How the numbers were counted:
 
@@ -77,9 +79,9 @@ Things to know before quoting these numbers:
    active, because `m_addr` uses the ALU only in the MEM state and `instr` uses `m_rdata` only
    in FETCH_EXEC. Vivado will also flag it, and it may make ABC optimise vn_top less well,
    which could explain part of vn_top's larger logic count.
-4. **Fmax is not measured.** Yosys has no timing model for 7-series. Getting Fmax needs
-   Vivado: synthesize and implement both tops, with a false path on the loop above, then read
-   the timing summary.
+4. **No 7-series Fmax.** Yosys has no timing model for 7-series and Vivado does not run on
+   macOS, so Fmax was measured on a Lattice ECP5 instead (next section). A Vivado run on an
+   Artix-7 board is planned for Phase II.
 5. These are Yosys estimates after synthesis, not Vivado utilisation after place and route.
 
 **Result:** the Harvard design needs about 34% fewer LUTs (713 vs 1080) and 33 fewer
@@ -87,3 +89,49 @@ flip-flops than the shared-memory baseline, while running every program in fewer
 split memory costs a separate ROM (128 LUTs), but the baseline pays more for a 512-word memory,
 the latched instruction register, the two-state controller and the address muxing in front of
 its single port.
+
+## Maximum clock frequency (Lattice ECP5, open-source flow)
+
+Measured with Yosys `synth_ecp5` + `nextpnr-ecp5` (OSS CAD Suite 2026-11-18) on an LFE5U-85F,
+CABGA381, seed 1, after placement and routing. Reproduce from the repository root with
+`sh results/fmax/run_fmax.sh` (scripts and explanation in `results/fmax/`, logs in
+`results/logs/fmax_*`). Unlike the area runs above, the instruction ROM is **not** black-boxed
+here, because its read delay is on the critical path; it holds the pseudo-random
+`rom_random.hex` image (on both designs) so Yosys cannot hard-wire a program.
+
+| Build | Critical path (register → register) | Delay | Fmax |
+|---|---|---|---|
+| harvard_top | ROM (block RAM) → regfile → ALU → data RAM → regfile write | 23.29 ns | **42.94 MHz** |
+| vn_top, fetch leg | PC → shared mem (512-word LUT-RAM) → decode → regfile → ALU compare → PC | 26.83 ns | 37.27 MHz |
+| vn_top, MEM leg | latched `ir` → regfile → ALU → shared mem → regfile write | 18.88 ns | 52.97 MHz |
+| **vn_top** | slower of the two legs | 26.83 ns | **37.27 MHz** |
+
+**Why vn_top is timed in two builds.** nextpnr cannot time a design that contains
+combinational loops, and vn_top has two that can never be active (point 3 above, plus
+`m_rdata` → control → `mem_re` → `m_re` → `m_rdata`, since read data is gated by `m_re`).
+With `--ignore-loops` nextpnr cut the loop in the wrong place and reported 4.96 MHz for a path
+that went through the memory three times in one cycle, which is impossible, so that number is
+discarded. Instead, `run_fmax.sh` builds two copies of `cpu_core_vn` (the RTL in `rtl/` is not
+changed): the fetch leg fixes `m_addr = pc` and `m_re = ~halted`, the MEM leg fixes
+`instr = ir`. Every real path exists in at least one copy; only the impossible paths (through
+both legs) exist in neither. A gate-level `yosys check` finds 0 loops in both copies (14034 in
+the original). vn_top's Fmax is the minimum of the two legs. Each critical path above was
+checked to read memory only once.
+
+**Execution time = cycles / Fmax:**
+
+| Program | Harvard cycles | Harvard time | Baseline cycles | Baseline time | Speed-up |
+|---|---|---|---|---|---|
+| basic      | 19 |  442 ns | 26 |  698 ns | 1.58x |
+| array_sum  | 38 |  885 ns | 48 | 1288 ns | 1.46x |
+| memcopy    | 54 | 1258 ns | 71 | 1905 ns | 1.51x |
+| count_loop | 64 | 1490 ns | 65 | 1744 ns | 1.17x |
+
+**Result:** the Harvard design is faster in clock frequency as well as CPI. Its single cycle
+contains two memory reads (ROM and data RAM), but the ROM is a small block RAM and the data RAM
+holds 256 words. The baseline's fetch leg has one read, but from a 512-word LUT-RAM (a deeper
+read multiplexer) followed by the gating of `m_rdata`, and that leg sets its clock.
+
+Caveats: this is an ECP5, not a Xilinx 7-series part; one placement seed; I/O paths are not
+constrained (only register-to-register timing is reported); the Harvard ROM is a block RAM
+while all baseline memory is LUT-RAM, which is how each design maps naturally.
