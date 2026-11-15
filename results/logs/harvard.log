@@ -1,14 +1,14 @@
-  [165000] d_fault: invalid data address 0x00000800
-  [175000] d_fault: invalid data address 0x00000800
+  [165000] d_fault: invalid data address 0x00000808
+  [175000] d_fault: invalid data address 0x00000808
 HARVARD basic      cycles=19 instrs=19 d_access=7 simul=7 out_port=12
 tb_harvard_top(basic): PASS
-../tb/tb_harvard_top.v:70: $finish called at 236000 (1ps)
+../tb/tb_harvard_top.v:75: $finish called at 236000 (1ps)
 HARVARD array_sum  cycles=38 instrs=38 d_access=10 simul=10 out_port=31
 tb_harvard_top(array_sum): PASS
-../tb/tb_harvard_top.v:70: $finish called at 426000 (1ps)
+../tb/tb_harvard_top.v:75: $finish called at 426000 (1ps)
 HARVARD memcopy    cycles=54 instrs=54 d_access=17 simul=17 out_port=360
 tb_harvard_top(memcopy): PASS
-../tb/tb_harvard_top.v:70: $finish called at 586000 (1ps)
+../tb/tb_harvard_top.v:75: $finish called at 586000 (1ps)
 HARVARD count_loop cycles=64 instrs=64 d_access=1 simul=1 out_port=210
 tb_harvard_top(count_loop): PASS
-../tb/tb_harvard_top.v:70: $finish called at 686000 (1ps)
+../tb/tb_harvard_top.v:75: $finish called at 686000 (1ps)

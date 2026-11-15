@@ -9,14 +9,14 @@ module tb_harvard_top;
     parameter TIMEOUT   = 10000;
 
     reg         clk = 0, rst = 1;
-    wire        halt;
+    wire        halt, d_fault;
     wire [31:0] out_port, cycle_count, instr_count, d_access_count, simul_count;
     integer     errors = 0;
 
     harvard_top #(.PROG_FILE(PROG_FILE), .DATA_FILE(DATA_FILE)) dut (
         .clk(clk), .rst(rst), .halt(halt), .out_port(out_port),
         .cycle_count(cycle_count), .instr_count(instr_count),
-        .d_access_count(d_access_count), .simul_count(simul_count));
+        .d_access_count(d_access_count), .simul_count(simul_count), .d_fault(d_fault));
 
     always #5 clk = ~clk;
 
@@ -33,9 +33,13 @@ module tb_harvard_top;
     `include "expected.vh"
 
     // print every data-side fault, so invalid accesses are visible in the log
+    // count and print every data-side fault, so invalid accesses are checked and visible
+    integer fault_cycles = 0;
     always @(posedge clk)
-        if (!rst && dut.d_fault)
+        if (!rst && d_fault) begin
+            fault_cycles = fault_cycles + 1;
             $display("  [%0t] d_fault: invalid data address 0x%h", $time, dut.u_core.d_addr);
+        end
 
     integer cyc;
     initial begin
@@ -59,6 +63,7 @@ module tb_harvard_top;
         if (exp_instr >= 0) begin
             chk("instr_count", instr_count, exp_instr);
             chk("d_access_count", d_access_count, exp_daccess);
+            chk("d_fault cycles", fault_cycles, exp_faults);
         end
         chk("cycles == instrs (CPI 1)", cycle_count, instr_count);
         chk("simul == d_access", simul_count, d_access_count);

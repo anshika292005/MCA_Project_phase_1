@@ -8,14 +8,14 @@ module tb_vn_top;
     parameter TIMEOUT   = 10000;
 
     reg         clk = 0, rst = 1;
-    wire        halt;
+    wire        halt, d_fault;
     wire [31:0] out_port, cycle_count, instr_count, d_access_count, simul_count;
     integer     errors = 0;
 
     vn_top #(.PROG_FILE(PROG_FILE), .DATA_FILE(DATA_FILE)) dut (
         .clk(clk), .rst(rst), .halt(halt), .out_port(out_port),
         .cycle_count(cycle_count), .instr_count(instr_count),
-        .d_access_count(d_access_count), .simul_count(simul_count));
+        .d_access_count(d_access_count), .simul_count(simul_count), .d_fault(d_fault));
 
     always #5 clk = ~clk;
 
@@ -31,9 +31,13 @@ module tb_vn_top;
 
     `include "expected.vh"
 
+    // count and print every data-side fault, so invalid accesses are checked and visible
+    integer fault_cycles = 0;
     always @(posedge clk)
-        if (!rst && dut.d_fault)
+        if (!rst && d_fault) begin
+            fault_cycles = fault_cycles + 1;
             $display("  [%0t] d_fault: invalid data address 0x%h", $time, dut.m_addr);
+        end
 
     integer cyc;
     initial begin
@@ -54,9 +58,14 @@ module tb_vn_top;
         #1;
 
         check_program;
+        // 0x808 (basic.s invalid write) aliases shared_mem word 2 = the program's third
+        // instruction; it must not have been overwritten
+        if (PROG_NAME == "basic")
+            chk("code word 2", dut.u_mem.mem[2], 32'h0020_81B3);   // add x3, x1, x2
         if (exp_instr >= 0) begin
             chk("instr_count", instr_count, exp_instr);
             chk("d_access_count", d_access_count, exp_daccess);
+            chk("d_fault cycles", fault_cycles, exp_faults);
         end
         // one port: each data access costs one extra cycle, never overlaps a fetch
         chk("cycles == instrs + d_access", cycle_count, instr_count + d_access_count);

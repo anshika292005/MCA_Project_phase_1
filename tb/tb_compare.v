@@ -6,6 +6,7 @@
 //   2. out_port identical
 //   3. Harvard cycles == Harvard instructions             (CPI = 1)
 //   4. baseline cycles == Harvard cycles + Harvard d_access_count
+//   5. both designs raise d_fault in the same number of cycles
 // Prints one markdown table row for results/comparison.md.
 module tb_compare;
     parameter PROG_NAME = "basic";
@@ -16,19 +17,25 @@ module tb_compare;
     reg clk = 0, rst = 1;
     always #5 clk = ~clk;
 
-    wire        h_halt, v_halt;
+    wire        h_halt, v_halt, h_fault, v_fault;
     wire [31:0] h_out, h_cyc, h_ins, h_dacc, h_sim;
     wire [31:0] v_out, v_cyc, v_ins, v_dacc, v_sim;
 
     harvard_top #(.PROG_FILE(PROG_FILE), .DATA_FILE(DATA_FILE)) h (
         .clk(clk), .rst(rst), .halt(h_halt), .out_port(h_out),
-        .cycle_count(h_cyc), .instr_count(h_ins), .d_access_count(h_dacc), .simul_count(h_sim));
+        .cycle_count(h_cyc), .instr_count(h_ins), .d_access_count(h_dacc), .simul_count(h_sim),
+        .d_fault(h_fault));
 
     vn_top #(.PROG_FILE(PROG_FILE), .DATA_FILE(DATA_FILE)) v (
         .clk(clk), .rst(rst), .halt(v_halt), .out_port(v_out),
-        .cycle_count(v_cyc), .instr_count(v_ins), .d_access_count(v_dacc), .simul_count(v_sim));
+        .cycle_count(v_cyc), .instr_count(v_ins), .d_access_count(v_dacc), .simul_count(v_sim),
+        .d_fault(v_fault));
 
-    integer errors = 0, cyc, n;
+    integer errors = 0, cyc, n, h_faults = 0, v_faults = 0;
+    always @(posedge clk) if (!rst) begin
+        if (h_fault) h_faults = h_faults + 1;
+        if (v_fault) v_faults = v_faults + 1;
+    end
     real    h_cpi, v_cpi, ls_frac, speedup;
 
     initial begin
@@ -65,6 +72,9 @@ module tb_compare;
         end
         if (h_ins !== v_ins) begin
             $display("FAIL instr_count: harvard=%0d vn=%0d", h_ins, v_ins); errors = errors + 1;
+        end
+        if (h_faults !== v_faults) begin
+            $display("FAIL d_fault cycles: harvard=%0d vn=%0d", h_faults, v_faults); errors = errors + 1;
         end
         if (h_cyc !== h_ins) begin
             $display("FAIL harvard cycles %0d != instrs %0d", h_cyc, h_ins); errors = errors + 1;

@@ -24,7 +24,8 @@ module vn_top #(
     output wire [31:0] cycle_count,
     output wire [31:0] instr_count,
     output wire [31:0] d_access_count,
-    output wire [31:0] simul_count
+    output wire [31:0] simul_count,
+    output wire        d_fault      // 1 in a cycle that reads/writes an invalid data address
 );
     wire [31:0] m_addr, m_wdata, m_rdata, mem_rdata;
     wire        m_we, m_re, m_is_data, instr_done;
@@ -73,7 +74,7 @@ module vn_top #(
             out_port <= m_wdata;
     end
 
-    wire d_fault = m_is_data & (m_we | m_re) & addr_fault;   // for debugging / waves
+    assign d_fault = m_is_data & (m_we | m_re) & addr_fault;
 
     perf_counters u_perf (
         .clk           (clk),

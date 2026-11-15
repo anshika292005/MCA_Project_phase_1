@@ -7,15 +7,16 @@
 //
 // exp_instr / exp_daccess are the hand-counted dynamic instruction count and
 // number of LW/SW executed, used to check the cycle counts.
+// exp_faults is the number of cycles in which d_fault must be 1 (invalid data address).
 
-integer exp_instr, exp_daccess;
+integer exp_instr, exp_daccess, exp_faults;
 integer k;
 
 task check_program;
     begin
-        exp_instr = -1; exp_daccess = -1;
+        exp_instr = -1; exp_daccess = -1; exp_faults = -1;
         if (PROG_NAME == "basic") begin
-            exp_instr = 19; exp_daccess = 7;
+            exp_instr = 19; exp_daccess = 7; exp_faults = 2;   // SW + LW to 0x808
             chk("x1",  `REG(1),  5);
             chk("x2",  `REG(2),  7);
             chk("x3",  `REG(3),  12);
@@ -27,23 +28,24 @@ task check_program;
             chk("x9",  `REG(9),  32'hFFFF_FFFF);
             chk("x10", `REG(10), 0);
             chk("x11", `REG(11), 0);
-            chk("x12", `REG(12), 32'h800);
+            chk("x12", `REG(12), 32'h808);
             chk("mem[0]", `DMEM(0), 12);
             chk("mem[1]", `DMEM(1), 32'hFFFF_FFFF);
+            chk("mem[2] (bad write)", `DMEM(2), 0);
             chk("out_port", out_port, 12);
         end else if (PROG_NAME == "array_sum") begin
-            exp_instr = 38; exp_daccess = 10;
+            exp_instr = 38; exp_daccess = 10; exp_faults = 0;
             chk("x3", `REG(3), 31);
             chk("mem[8]", `DMEM(8), 31);
             chk("out_port", out_port, 31);
         end else if (PROG_NAME == "memcopy") begin
-            exp_instr = 54; exp_daccess = 17;
+            exp_instr = 54; exp_daccess = 17; exp_faults = 0;
             for (k = 0; k < 8; k = k + 1)
                 chk("copy", `DMEM(16 + k), 10 * (k + 1));
             chk("x5", `REG(5), 360);
             chk("out_port", out_port, 360);
         end else if (PROG_NAME == "count_loop") begin
-            exp_instr = 64; exp_daccess = 1;
+            exp_instr = 64; exp_daccess = 1; exp_faults = 0;
             chk("x1", `REG(1), 0);
             chk("x2", `REG(2), 210);
             chk("out_port", out_port, 210);

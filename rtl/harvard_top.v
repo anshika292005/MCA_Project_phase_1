@@ -18,11 +18,12 @@ module harvard_top #(
     output wire [31:0] cycle_count,
     output wire [31:0] instr_count,
     output wire [31:0] d_access_count,
-    output wire [31:0] simul_count
+    output wire [31:0] simul_count,
+    output wire        d_fault      // 1 in a cycle that reads/writes an invalid data address
 );
     wire [31:0] i_addr, i_rdata;
     wire [31:0] d_addr, d_wdata, d_rdata;
-    wire        d_we, d_re, d_fault, instr_done;
+    wire        d_we, d_re, instr_done;
 
     cpu_core u_core (
         .clk       (clk),
@@ -48,7 +49,7 @@ module harvard_top #(
         .d_we    (d_we),
         .d_re    (d_re),
         .d_rdata (d_rdata),
-        .d_fault (d_fault),     // not a top-level port; visible as dut.d_fault
+        .d_fault (d_fault),
         .out_port(out_port)
     );
 
