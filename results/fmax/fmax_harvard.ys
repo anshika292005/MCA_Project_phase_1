@@ -1,0 +1,15 @@
+# Fmax estimate for harvard_top on a Lattice ECP5 (LFE5U-85F) with the open-source flow
+# (Yosys + nextpnr-ecp5). Run from the repository root via results/fmax/run_fmax.sh.
+# The instruction ROM is NOT black-boxed here: its read delay is part of the critical path
+# (fetch -> decode -> ALU -> data RAM -> write-back). It is loaded with rom_random.hex so
+# Yosys cannot hard-wire a program into the core (same reasoning as synth_rom.ys).
+read_verilog rtl/mem/instr_mem.v rtl/mem/data_mem.v rtl/mem/addr_decoder.v rtl/mem/rw_ctrl.v rtl/mem/harvard_mem.v
+read_verilog rtl/core/regfile.v rtl/core/alu.v rtl/core/imm_gen.v rtl/core/control.v rtl/core/pc_reg.v rtl/core/cpu_core.v
+read_verilog rtl/common/perf_counters.v rtl/harvard_top.v
+chparam -set PROG_FILE "results/synth/rom_random.hex" -set DATA_FILE "programs/memcopy_data.hex" harvard_top
+hierarchy -top harvard_top
+proc
+# same Yosys init-priority workaround as results/synth/*.ys (no RTL change)
+delete t:$meminit_v2 r:WORDS=1 %i
+synth_ecp5 -top harvard_top -json results/fmax/harvard_ecp5.json
+tee -o results/fmax/harvard_ecp5_stat.txt stat

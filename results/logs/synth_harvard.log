@@ -1183,8 +1183,8 @@ Found and reported 0 problems.
 
 17.11. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \harvard_top..
-Removed 13 unused cells and 756 unused wires.
-<suppressed ~22 debug messages>
+Removed 9 unused cells and 750 unused wires.
+<suppressed ~14 debug messages>
 
 17.12. Executing OPT pass (performing simple optimizations).
 
@@ -1193,12 +1193,12 @@ Optimizing module harvard_top.
 
 17.12.2. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 202 cells of `\harvard_top'.
+Computing hashes of 206 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
-Computing hashes of 170 cells of `\harvard_top'.
+Computing hashes of 173 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
-<suppressed ~96 debug messages>
-Removed a total of 32 cells.
+<suppressed ~99 debug messages>
+Removed a total of 33 cells.
 
 17.12.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
 Running muxtree optimizer on module \harvard_top..
@@ -1244,11 +1244,11 @@ Removed 32 multiplexer ports.
 
 17.12.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
   Optimizing cells in module \harvard_top.
-    New ctrl vector for $pmux cell $flatten\u_core.\u_ctrl.$procmux$3457: $auto$opt_reduce.cc:137:opt_pmux$4713
     Consolidated identical input bits for $mux cell $flatten\u_mem.\u_dmem.$procmux$3581:
       Old ports: A=0, B=32'11111111111111111111111111111111, Y=$flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768
       New ports: A=1'0, B=1'1, Y=$flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0]
       New connections: $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [31:1] = { $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] $flatten\u_mem.\u_dmem.$0$memwr$\mem$rtl/mem/data_mem.v:42$2764_EN[31:0]$2768 [0] }
+    New ctrl vector for $pmux cell $flatten\u_core.\u_ctrl.$procmux$3457: $auto$opt_reduce.cc:137:opt_pmux$4713
     Consolidated identical input bits for $mux cell $flatten\u_core.\u_regfile.$procmux$3567:
       Old ports: A=0, B=32'11111111111111111111111111111111, Y=$flatten\u_core.\u_regfile.$0$memwr$\regs$rtl/core/regfile.v:29$1599_EN[31:0]$1603
       New ports: A=1'0, B=1'1, Y=$flatten\u_core.\u_regfile.$0$memwr$\regs$rtl/core/regfile.v:29$1599_EN[31:0]$1603 [0]
@@ -1258,13 +1258,13 @@ Performed a total of 3 changes.
 
 17.12.5. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 139 cells of `\harvard_top'.
+Computing hashes of 142 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
-Computing hashes of 132 cells of `\harvard_top'.
+Computing hashes of 135 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
-Computing hashes of 131 cells of `\harvard_top'.
+Computing hashes of 134 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
-Computing hashes of 130 cells of `\harvard_top'.
+Computing hashes of 133 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 <suppressed ~27 debug messages>
 Removed a total of 9 cells.
@@ -1273,7 +1273,7 @@ Removed a total of 9 cells.
 
 17.12.7. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \harvard_top..
-Removed 0 unused cells and 71 unused wires.
+Removed 0 unused cells and 72 unused wires.
 <suppressed ~1 debug messages>
 
 17.12.8. Executing OPT_EXPR pass (perform const folding).
@@ -1297,7 +1297,7 @@ Performed a total of 1 changes.
 
 17.12.12. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 131 cells of `\harvard_top'.
+Computing hashes of 134 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
@@ -1325,7 +1325,7 @@ Performed a total of 0 changes.
 
 17.12.19. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 131 cells of `\harvard_top'.
+Computing hashes of 134 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
@@ -1365,7 +1365,7 @@ Optimizing module harvard_top.
 
 17.14.2. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 131 cells of `\harvard_top'.
+Computing hashes of 134 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
@@ -1383,17 +1383,17 @@ Performed a total of 0 changes.
 
 17.14.5. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 131 cells of `\harvard_top'.
+Computing hashes of 134 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
 17.14.6. Executing OPT_DFF pass (perform DFF optimizations).
-Adding SRST signal on $flatten\u_core.$procdff$3594 ($dff) from module harvard_top (D = $flatten\u_core.$procmux$3320_Y, Q = \u_core.halted, rval = 1'0).
-Adding EN signal on $auto$ff.cc:337:slice$4716 ($sdff) from module harvard_top (D = 1'1, Q = \u_core.halted).
 Adding SRST signal on $flatten\u_mem.$procdff$3599 ($dff) from module harvard_top (D = $flatten\u_mem.$procmux$3575_Y, Q = \u_mem.out_port, rval = 0).
-Adding EN signal on $auto$ff.cc:337:slice$4718 ($sdff) from module harvard_top (D = \u_core.rs2_val, Q = \u_mem.out_port).
+Adding EN signal on $auto$ff.cc:337:slice$4716 ($sdff) from module harvard_top (D = \u_core.rs2_val, Q = \u_mem.out_port).
 Adding SRST signal on $flatten\u_core.\u_pc.$procdff$3595 ($dff) from module harvard_top (D = $flatten\u_core.\u_pc.$procmux$3325_Y, Q = \u_core.u_pc.pc, rval = 0).
-Adding EN signal on $auto$ff.cc:337:slice$4720 ($sdff) from module harvard_top (D = \u_core.u_pc.pc_next, Q = \u_core.u_pc.pc).
+Adding EN signal on $auto$ff.cc:337:slice$4718 ($sdff) from module harvard_top (D = \u_core.u_pc.pc_next, Q = \u_core.u_pc.pc).
+Adding SRST signal on $flatten\u_core.$procdff$3594 ($dff) from module harvard_top (D = $flatten\u_core.$procmux$3320_Y, Q = \u_core.halted, rval = 1'0).
+Adding EN signal on $auto$ff.cc:337:slice$4720 ($sdff) from module harvard_top (D = 1'1, Q = \u_core.halted).
 Adding SRST signal on $flatten\u_perf.$procdff$3593 ($dff) from module harvard_top (D = $flatten\u_perf.$procmux$3289_Y, Q = \u_perf.stopped, rval = 1'0).
 Adding SRST signal on $flatten\u_perf.$procdff$3592 ($dff) from module harvard_top (D = $flatten\u_perf.$procmux$3296_Y, Q = \u_perf.simul_count, rval = 0).
 Adding EN signal on $auto$ff.cc:337:slice$4723 ($sdff) from module harvard_top (D = $flatten\u_perf.$rtl/common/perf_counters.v:38$add$1720_Y, Q = \u_perf.simul_count).
@@ -1428,9 +1428,9 @@ Performed a total of 0 changes.
 
 17.14.12. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 120 cells of `\harvard_top'.
+Computing hashes of 123 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
-Computing hashes of 118 cells of `\harvard_top'.
+Computing hashes of 121 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 <suppressed ~6 debug messages>
 Removed a total of 2 cells.
@@ -1461,7 +1461,7 @@ Performed a total of 0 changes.
 
 17.14.19. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 118 cells of `\harvard_top'.
+Computing hashes of 121 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
@@ -1680,7 +1680,7 @@ Optimizing module harvard_top.
 
 17.31.2. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 124 cells of `\harvard_top'.
+Computing hashes of 127 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
@@ -1704,7 +1704,7 @@ Performed a total of 0 changes.
 
 17.31.5. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 124 cells of `\harvard_top'.
+Computing hashes of 127 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
@@ -1734,7 +1734,7 @@ Performed a total of 0 changes.
 
 17.31.12. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 124 cells of `\harvard_top'.
+Computing hashes of 127 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
@@ -1844,13 +1844,13 @@ Optimizing module harvard_top.
 
 17.37.2. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 151 cells of `\harvard_top'.
+Computing hashes of 154 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
 17.37.3. Executing OPT_DFF pass (perform DFF optimizations).
 Adding EN signal on $auto$ff.cc:337:slice$4722 ($sdff) from module harvard_top (D = 1'1, Q = \u_perf.stopped).
-Adding EN signal on $auto$ff.cc:337:slice$4721 ($sdffe) from module harvard_top (D = \u_core.u_pc.pc_next [1:0], Q = \u_core.u_pc.pc [1:0]).
+Adding EN signal on $auto$ff.cc:337:slice$4719 ($sdffe) from module harvard_top (D = \u_core.u_pc.pc_next [1:0], Q = \u_core.u_pc.pc [1:0]).
 
 17.37.4. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \harvard_top..
@@ -1865,9 +1865,9 @@ Optimizing module harvard_top.
 
 17.37.7. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 152 cells of `\harvard_top'.
+Computing hashes of 155 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
-Computing hashes of 151 cells of `\harvard_top'.
+Computing hashes of 154 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 <suppressed ~3 debug messages>
 Removed a total of 1 cells.
@@ -1890,7 +1890,7 @@ Optimizing module harvard_top.
 
 17.39.2. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 151 cells of `\harvard_top'.
+Computing hashes of 154 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
@@ -1913,7 +1913,7 @@ Performed a total of 1 changes.
 
 17.39.5. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 151 cells of `\harvard_top'.
+Computing hashes of 154 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
@@ -1951,7 +1951,7 @@ Performed a total of 1 changes.
 
 17.39.13. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 153 cells of `\harvard_top'.
+Computing hashes of 156 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
@@ -1981,7 +1981,7 @@ Performed a total of 0 changes.
 
 17.39.21. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 153 cells of `\harvard_top'.
+Computing hashes of 156 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 Removed a total of 0 cells.
 
@@ -2053,8 +2053,8 @@ Using template $paramod$599fc21b257bc9b96c6caef6b35a2ec30d8fdbca\_80_xilinx_alu 
 Using template $paramod$25c4246495a9f56061a0efa92b046161d5d15f2e\_80_xilinx_alu for cells of type $alu.
 Using template $paramod$d735c1bd8e4aaeb55e846141d44dc1e2c1104582\_80_xilinx_alu for cells of type $alu.
 Using extmapper simplemap for cells of type $mux.
-Using extmapper simplemap for cells of type $or.
 Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $or.
 Using extmapper simplemap for cells of type $logic_not.
 Using extmapper simplemap for cells of type $reduce_bool.
 Using extmapper simplemap for cells of type $logic_and.
@@ -2064,7 +2064,7 @@ Using template $paramod$ec6bc98d89d1c83eea3bfe9591eeec18f10da320\_80_xilinx_alu 
 Using extmapper simplemap for cells of type $xor.
 Using extmapper simplemap for cells of type $pos.
 No more expansions possible.
-<suppressed ~958 debug messages>
+<suppressed ~961 debug messages>
 
 17.42. Executing OPT pass (performing simple optimizations).
 
@@ -2074,15 +2074,15 @@ Optimizing module harvard_top.
 
 17.42.2. Executing OPT_MERGE pass (detect identical cells).
 Finding identical cells in module `\harvard_top'.
-Computing hashes of 1574 cells of `\harvard_top'.
+Computing hashes of 1577 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
-Computing hashes of 1470 cells of `\harvard_top'.
+Computing hashes of 1473 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
-Computing hashes of 1448 cells of `\harvard_top'.
+Computing hashes of 1451 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
-Computing hashes of 1439 cells of `\harvard_top'.
+Computing hashes of 1442 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
-Computing hashes of 1438 cells of `\harvard_top'.
+Computing hashes of 1441 cells of `\harvard_top'.
 Finding duplicate cells in `\harvard_top'.
 <suppressed ~408 debug messages>
 Removed a total of 136 cells.
@@ -2100,6 +2100,7 @@ Removed 188 unused cells and 289 unused wires.
 Mapping port harvard_top.clk using IBUF.
 Mapping port harvard_top.cycle_count using OBUF.
 Mapping port harvard_top.d_access_count using OBUF.
+Mapping port harvard_top.d_fault using OBUF.
 Mapping port harvard_top.halt using OBUF.
 Mapping port harvard_top.instr_count using OBUF.
 Mapping port harvard_top.out_port using OBUF.
@@ -2147,7 +2148,7 @@ Successfully finished Verilog frontend.
 17.44.3. Continuing TECHMAP pass.
 No more expansions possible.
 <suppressed ~80 debug messages>
-Removed 0 unused cells and 8 unused wires.
+Removed 0 unused cells and 9 unused wires.
 
 17.45. Executing DFFLEGALIZE pass (convert FFs and LATCHes to types supported by the target).
 
@@ -2199,7 +2200,7 @@ Successfully finished Verilog frontend.
 Cleaned up 0 empty switches.
 
 17.49.3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
-Marked 1 switch rules as full_case in process $/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919 in module $paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.
+Marked 1 switch rules as full_case in process $/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922 in module $paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.
 Removed a total of 0 dead cases.
 
 17.49.3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
@@ -2207,13 +2208,13 @@ Removed 0 redundant assignments.
 Promoted 16 assignments to connections.
 
 17.49.3.4. Executing PROC_INIT pass (extract init attributes).
-Found init rule in `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1806$proc$8017'.
+Found init rule in `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1806$proc$8020'.
   Set init value: \mem_d = 64'0000000000000000000000000000000000000000000000000000000000000000
-Found init rule in `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1805$proc$8016'.
+Found init rule in `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1805$proc$8019'.
   Set init value: \mem_c = 64'0000000000000000000000000000000000000000000000000000000000000000
-Found init rule in `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1804$proc$8015'.
+Found init rule in `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1804$proc$8018'.
   Set init value: \mem_b = 64'0000000000000000000000000000000000000000000000000000000000000000
-Found init rule in `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1803$proc$8014'.
+Found init rule in `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1803$proc$8017'.
   Set init value: \mem_a = 64'0000000000000000000000000000000000000000000000000000000000000000
 
 17.49.3.5. Executing PROC_ARST pass (detect async resets in processes).
@@ -2223,57 +2224,57 @@ Converted 0 switches.
 <suppressed ~1 debug messages>
 
 17.49.3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
-Creating decoders for process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1806$proc$8017'.
-Creating decoders for process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1805$proc$8016'.
-Creating decoders for process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1804$proc$8015'.
-Creating decoders for process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1803$proc$8014'.
-Creating decoders for process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
-     1/8: $1$lookahead\mem_d$7918[63:0]$7935
-     2/8: $1$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1817$7901[31:0]$7931
-     3/8: $1$lookahead\mem_c$7917[63:0]$7934
-     4/8: $1$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1816$7900[31:0]$7930
-     5/8: $1$lookahead\mem_b$7916[63:0]$7933
-     6/8: $1$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1815$7899[31:0]$7929
-     7/8: $1$lookahead\mem_a$7915[63:0]$7932
-     8/8: $1$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1814$7898[31:0]$7928
+Creating decoders for process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1806$proc$8020'.
+Creating decoders for process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1805$proc$8019'.
+Creating decoders for process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1804$proc$8018'.
+Creating decoders for process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1803$proc$8017'.
+Creating decoders for process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
+     1/8: $1$lookahead\mem_d$7921[63:0]$7938
+     2/8: $1$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1817$7904[31:0]$7934
+     3/8: $1$lookahead\mem_c$7920[63:0]$7937
+     4/8: $1$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1816$7903[31:0]$7933
+     5/8: $1$lookahead\mem_b$7919[63:0]$7936
+     6/8: $1$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1815$7902[31:0]$7932
+     7/8: $1$lookahead\mem_a$7918[63:0]$7935
+     8/8: $1$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1814$7901[31:0]$7931
 
 17.49.3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
 
 17.49.3.9. Executing PROC_DFF pass (convert process syncs to FFs).
-Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1814$7898' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
-  created $dff cell `$procdff$8042' with positive edge clock.
-Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1815$7899' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
-  created $dff cell `$procdff$8043' with positive edge clock.
-Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1816$7900' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
-  created $dff cell `$procdff$8044' with positive edge clock.
-Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1817$7901' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
+Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1814$7901' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
   created $dff cell `$procdff$8045' with positive edge clock.
-Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$lookahead\mem_a$7915' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
+Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1815$7902' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
   created $dff cell `$procdff$8046' with positive edge clock.
-Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$lookahead\mem_b$7916' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
+Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1816$7903' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
   created $dff cell `$procdff$8047' with positive edge clock.
-Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$lookahead\mem_c$7917' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
+Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$bitselwrite$pos$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1817$7904' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
   created $dff cell `$procdff$8048' with positive edge clock.
-Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$lookahead\mem_d$7918' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
+Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$lookahead\mem_a$7918' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
   created $dff cell `$procdff$8049' with positive edge clock.
-Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.\mem_a' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
+Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$lookahead\mem_b$7919' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
   created $dff cell `$procdff$8050' with positive edge clock.
-Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.\mem_b' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
+Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$lookahead\mem_c$7920' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
   created $dff cell `$procdff$8051' with positive edge clock.
-Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.\mem_c' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
+Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$lookahead\mem_d$7921' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
   created $dff cell `$procdff$8052' with positive edge clock.
-Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.\mem_d' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
+Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.\mem_a' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
   created $dff cell `$procdff$8053' with positive edge clock.
+Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.\mem_b' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
+  created $dff cell `$procdff$8054' with positive edge clock.
+Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.\mem_c' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
+  created $dff cell `$procdff$8055' with positive edge clock.
+Creating register for signal `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.\mem_d' using process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
+  created $dff cell `$procdff$8056' with positive edge clock.
 
 17.49.3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
 
 17.49.3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
-Removing empty process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1806$proc$8017'.
-Removing empty process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1805$proc$8016'.
-Removing empty process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1804$proc$8015'.
-Removing empty process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1803$proc$8014'.
-Found and cleaned up 1 empty switch in `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
-Removing empty process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7919'.
+Removing empty process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1806$proc$8020'.
+Removing empty process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1805$proc$8019'.
+Removing empty process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1804$proc$8018'.
+Removing empty process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1803$proc$8017'.
+Found and cleaned up 1 empty switch in `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
+Removing empty process `$paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M.$/opt/homebrew/Cellar/yosys/0.71/bin/../share/yosys/xilinx/cells_sim.v:1812$proc$7922'.
 Cleaned up 1 empty switch.
 
 17.49.4. Executing SCC pass (detecting logic loops).
@@ -2492,20 +2493,20 @@ Optimizing module harvard_top.
 17.49.14.16. Finished fast OPT passes. (There is nothing left to do.)
 
 17.49.15. Executing AIGMAP pass (map logic to AIG).
-Module harvard_top: replaced 625 cells with 3559 new cells, skipped 855 cells.
+Module harvard_top: replaced 626 cells with 3563 new cells, skipped 858 cells.
   replaced 3 cell types:
      289 $_MUX_
-     272 $_OR_
+     273 $_OR_
       64 $_XOR_
   not replaced 11 cell types:
-     187 $_AND_
-     176 $_NOT_
+     188 $_AND_
+     177 $_NOT_
       11 $scopeinfo
      194 FDRE
        2 IBUF
        1 instr_mem
       12 $paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M
-     161 OBUF
+     162 OBUF
       67 CARRY4
       32 RAM256X1S
       12 $paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M_$abc9_byp
@@ -2515,8 +2516,8 @@ Module harvard_top: replaced 625 cells with 3559 new cells, skipped 855 cells.
 17.49.15.2. Executing ABC9_OPS pass (helper functions for ABC9).
 
 17.49.15.3. Executing XAIGER2 backend.
-<suppressed ~492 debug messages>
-Extracted 2353 AND gates and 0 wires from module `harvard_top' to a netlist network with 1151 inputs and 2818 outputs.
+<suppressed ~493 debug messages>
+Extracted 2356 AND gates and 0 wires from module `harvard_top' to a netlist network with 1152 inputs and 2820 outputs.
 
 17.49.15.4. Executing ABC9_EXE pass (technology mapping using ABC9).
 
@@ -2527,50 +2528,50 @@ ABC: + read_lut <abc-temp-dir>/input.lut
 ABC: + read_box <abc-temp-dir>/input.box 
 ABC: + &read <abc-temp-dir>/input.xaig 
 ABC: + &ps 
-ABC: <abc-temp-dir>/input : i/o =    519/   1812  and =    1182  lev =   27 (3.99)  mem = 0.08 MB  box = 79  bb = 12
+ABC: <abc-temp-dir>/input : i/o =    520/   1814  and =    1184  lev =   27 (4.00)  mem = 0.08 MB  box = 79  bb = 12
 ABC: + &scorr 
 ABC: Warning: The network is combinational.
 ABC: + &sweep 
 ABC: + &dc2 
 ABC: + &dch -f -r 
 ABC: + &ps 
-ABC: <abc-temp-dir>/input : i/o =    519/   1812  and =    1741  lev =   27 (3.02)  mem = 0.08 MB  ch =  205  box = 79  bb = 12
-ABC: cst =       0  cls =    177  lit =     205  unused =    2510  proof =     0
+ABC: <abc-temp-dir>/input : i/o =    520/   1814  and =    1755  lev =   28 (3.04)  mem = 0.08 MB  ch =  208  box = 79  bb = 12
+ABC: cst =       0  cls =    180  lit =     208  unused =    2519  proof =     0
 ABC: + &if -W 300 -v 
 ABC: K = 8. Memory (bytes): Truth =    0. Cut =   80. Obj =  160. Set =  816. CutMin = no
-ABC: Node =    1741.  Ch =   177.  Total mem =    0.96 MB. Peak cut mem =    0.07 MB.
-ABC: P:  Del = 6405.00.  Ar =    2215.0.  Edge =     2160.  Cut =    36932.  T =     0.01 sec
-ABC: P:  Del = 6405.00.  Ar =    2176.0.  Edge =     2076.  Cut =    35103.  T =     0.00 sec
-ABC: P:  Del = 6405.00.  Ar =    1821.0.  Edge =     1719.  Cut =    62477.  T =     0.01 sec
-ABC: F:  Del = 6399.00.  Ar =    1616.0.  Edge =     1539.  Cut =    47445.  T =     0.01 sec
-ABC: A:  Del = 6399.00.  Ar =    1275.0.  Edge =     1405.  Cut =    47266.  T =     0.01 sec
-ABC: A:  Del = 6399.00.  Ar =    1272.0.  Edge =     1401.  Cut =    48008.  T =     0.01 sec
+ABC: Node =    1755.  Ch =   180.  Total mem =    0.96 MB. Peak cut mem =    0.07 MB.
+ABC: P:  Del = 6453.00.  Ar =    2267.0.  Edge =     2177.  Cut =    37026.  T =     0.01 sec
+ABC: P:  Del = 6453.00.  Ar =    2229.0.  Edge =     2100.  Cut =    35720.  T =     0.01 sec
+ABC: P:  Del = 6453.00.  Ar =    1922.0.  Edge =     1787.  Cut =    61077.  T =     0.01 sec
+ABC: F:  Del = 6441.00.  Ar =    1080.0.  Edge =     1417.  Cut =    50272.  T =     0.01 sec
+ABC: A:  Del = 6441.00.  Ar =    1041.0.  Edge =     1292.  Cut =    50054.  T =     0.01 sec
+ABC: A:  Del = 6441.00.  Ar =    1039.0.  Edge =     1290.  Cut =    52205.  T =     0.01 sec
 ABC: Total time =     0.04 sec
 ABC: + &write -n <abc-temp-dir>/output.aig 
 ABC: + &mfs 
 ABC: Currently "&mfs" cannot process the network containing white-boxes with more than 15 inputs.
 ABC: Error: Abc_FrameUpdateGia(): Transformation has failed.
 ABC: + &ps -l 
-ABC: <abc-temp-dir>/input : i/o =    519/   1812  and =    1419  lev =   27 (3.15)  mem = 0.08 MB  box = 79  bb = 12
-ABC: Mapping (K=7)  :  lut =    363  edge =    1401  lev =   10 (1.47)  levB =   18  mem = 0.03 MB
-ABC: LUT = 363 : 2=133 36.6 %  3=30 8.3 %  4=65 17.9 %  5=57 15.7 %  6=46 12.7 %  7=32 8.8 %  Ave = 3.86
+ABC: <abc-temp-dir>/input : i/o =    520/   1814  and =    1348  lev =   27 (3.17)  mem = 0.08 MB  box = 79  bb = 12
+ABC: Mapping (K=6)  :  lut =    336  edge =    1290  lev =   10 (1.54)  levB =   18  mem = 0.03 MB
+ABC: LUT = 336 : 2=115 34.2 %  3=33 9.8 %  4=52 15.5 %  5=63 18.8 %  6=73 21.7 %  Ave = 3.84
 ABC: + &write -n <abc-temp-dir>/output.aig 
 ABC: + &verify 
 ABC: Networks are equivalent.  Time =     0.06 sec
 ABC: + time 
-ABC: elapse: 0.18 seconds, total: 0.18 seconds
+ABC: elapse: 0.20 seconds, total: 0.20 seconds
 
 17.49.15.6. Executing AIGER frontend.
 <suppressed ~10 debug messages>
-Removed 1994 unused cells and 4394 unused wires.
+Removed 1951 unused cells and 4353 unused wires.
 
 17.49.15.7. Executing ABC_OPS_REINTEGRATE pass (reintegrate ABC mapped design into module).
-ABC RESULTS:              $lut cells:      376
+ABC RESULTS:              $lut cells:      349
 ABC RESULTS:           \CARRY4 cells:       67
 ABC RESULTS:   $paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M_$abc9_byp cells:       12
 ABC RESULTS:           input signals:      222
-ABC RESULTS:          output signals:        6
-<suppressed ~2331 debug messages>
+ABC RESULTS:          output signals:        7
+<suppressed ~2334 debug messages>
 Removing temp directory.
 
 17.49.16. Executing TECHMAP pass (map to technology primitives).
@@ -2587,7 +2588,7 @@ Using template $paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M for cell
 Using template $paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M_$abc9_byp for cells of type $paramod$f9a6fe86fd29419df8af48e7cfa158236be800e4\RAM32M_$abc9_byp.
 No more expansions possible.
 <suppressed ~32 debug messages>
-Removed 92 unused cells and 3210 unused wires.
+Removed 92 unused cells and 3212 unused wires.
 
 17.50. Executing XILINX_SRL pass (Xilinx shift register extraction).
 
@@ -2606,86 +2607,79 @@ Generating RTLIL representation for module `$__XILINX_MUXF78'.
 Successfully finished Verilog frontend.
 
 17.51.3. Continuing TECHMAP pass.
-Using template $paramod$7bb6a37e65823eeb4b38c370fec30ab082759a14$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'0010 for cells of type $lut.
-Using template $paramod$272652f6c6fbe9a75eff76e45cc7e2788835518b$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'0100 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00000100 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'1000 for cells of type $lut.
-Using template $paramod$364c9ffbffac467d60dfec81bba4e18476c15602$lut for cells of type $lut.
-Using template $paramod$9ae0f136c9ed34a2deb323e9b2a3a520eea61514$lut for cells of type $lut.
-Using template $paramod$bba54c1ef87367812b4c15f4aed5ac70773df775$lut for cells of type $lut.
-Using template $paramod$eba7de026ff587370e320127e266317dae097a89$lut for cells of type $lut.
-Using template $paramod$5e2c4e05bbdd2eaa20212f01bb8e88597c0f6680$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00010101 for cells of type $lut.
 Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'0001 for cells of type $lut.
 Using template $paramod$1effa3c907f0d9d1dda502de20d314028f79e638$lut for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'0010 for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'0110 for cells of type $lut.
+Using template $paramod$7bb6a37e65823eeb4b38c370fec30ab082759a14$lut for cells of type $lut.
+Using template $paramod$658b9ed803f0d3d335616d3858b53e0a2522f1e8$lut for cells of type $lut.
+Using template $paramod$9ee136c48a1105b213fb8794fd5179e8f5da68e1$lut for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00000100 for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'0100 for cells of type $lut.
+Using template $paramod$1ad9ca75a5e52e69f39f16c0b8ffb14773a0b7f2$lut for cells of type $lut.
+Using template $paramod$272652f6c6fbe9a75eff76e45cc7e2788835518b$lut for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'1000 for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00010000 for cells of type $lut.
+Using template $paramod$cf652acbfbf67d2248e3045cd0f09c58ca55886c$lut for cells of type $lut.
+Using template $paramod$8adf7fbd410d2cc654c288d5be5f7508ee8809b0$lut for cells of type $lut.
+Using template $paramod$eba7de026ff587370e320127e266317dae097a89$lut for cells of type $lut.
+Using template $paramod$571404c0889eaf57f492cb5e37f8acb5df5852f9$lut for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'1110 for cells of type $lut.
+Using template $paramod$e6cfc2a250ad5b0b3da266fa46a057a6eca6e3d9$lut for cells of type $lut.
+Using template $paramod$5e2c4e05bbdd2eaa20212f01bb8e88597c0f6680$lut for cells of type $lut.
+Using template $paramod$e6fb771c4c8566932ef9751124ee6380e06f2455$lut for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'1001 for cells of type $lut.
+Using template $paramod$364c9ffbffac467d60dfec81bba4e18476c15602$lut for cells of type $lut.
+Using template $paramod$9ae0f136c9ed34a2deb323e9b2a3a520eea61514$lut for cells of type $lut.
+Using template $paramod$d7ec878ecfa8f5f7604d3e91692b5d4c2ee758ad$lut for cells of type $lut.
+Using template $paramod$bde48aef5408a87cb15effb3f45965c2724dbd0c$lut for cells of type $lut.
 Using template $paramod$6e238df02989b317f10820a22773676e71120644$lut for cells of type $lut.
 Using template $paramod$84b02aa73dc080b6c5981897a829ebd50555b513$lut for cells of type $lut.
 Using template $paramod$9cf044275e70b6dc34d2f815a6f8ffc23f9694a0$lut for cells of type $lut.
 Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00000111 for cells of type $lut.
-Using template $paramod$3357e04690749b6c89de0fcd28f53cd216bd2047$lut for cells of type $lut.
-Using template $paramod$0cda23fbb9f1bfba2988323bb1297f834db2c655$lut for cells of type $lut.
-Using template $paramod$bde48aef5408a87cb15effb3f45965c2724dbd0c$lut for cells of type $lut.
 Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'01011100 for cells of type $lut.
-Using template $paramod$325bbddfe70acd571d9977f5bc18906528de89c1$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'0110 for cells of type $lut.
+Using template $paramod$edc5408543810b75387e137c757e2098b38f2887$lut for cells of type $lut.
+Using template $paramod$ba6782ae5c39b7b5dd7241c49c04fe3f354d3724$lut for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00110101 for cells of type $lut.
+Using template $paramod$4dfa26e736f9800d377c839a343d7cf750e306a6$lut for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'11010100 for cells of type $lut.
+Using template $paramod$34520a4a10b301a0801df1ce72ce1d8e7b611587$lut for cells of type $lut.
+Using template $paramod$aae8976351bdf1d57b59f51d97dd66dc62c26273$lut for cells of type $lut.
+Using template $paramod$399fceca93c3df0deeab87c0d4cb5e65aed2f28e$lut for cells of type $lut.
+Using template $paramod$1673d9358cd4aa7673b904a369491f3fe6beeb38$lut for cells of type $lut.
+Using template $paramod$251994398653c4cf8de320f1e306e535d5d2d624$lut for cells of type $lut.
+Using template $paramod$1a83edfae304edf1221b1284a2a16cc8b675aba9$lut for cells of type $lut.
+Using template $paramod$0cda23fbb9f1bfba2988323bb1297f834db2c655$lut for cells of type $lut.
+Using template $paramod$6d6beead1425af15cf78b27fd9b11b41b5d4bce8$lut for cells of type $lut.
 Using template $paramod$8053536281096b082671e9ed427f35a8c0315670$lut for cells of type $lut.
 Using template $paramod$c6932d0419018208e5384761d78f0ead9bcc772f$lut for cells of type $lut.
 Using template $paramod$8d7d2b657d2a9478f173fe55f7d75167c5e7d6e3$lut for cells of type $lut.
 Using template $paramod$a0dd0229ad33b2f78d52b07f1c467811eff75c14$lut for cells of type $lut.
-Using template $paramod$e6fb771c4c8566932ef9751124ee6380e06f2455$lut for cells of type $lut.
-Using template $paramod$edc5408543810b75387e137c757e2098b38f2887$lut for cells of type $lut.
-Using template $paramod$63dfb5d507c3c0842cdb02014ffa50dbe5770b84$lut for cells of type $lut.
 Using template $paramod$d8dd46595c7d6f11fd6816ca9da9a9a3b625d7a8$lut for cells of type $lut.
-Using template $paramod$200337237619ba4c0bed9a492562f1d1b57fb569$lut for cells of type $lut.
-Using template $paramod$ba6782ae5c39b7b5dd7241c49c04fe3f354d3724$lut for cells of type $lut.
-Using template $paramod$aae8976351bdf1d57b59f51d97dd66dc62c26273$lut for cells of type $lut.
-Using template $paramod$e0e0b9515c7031ae11155409478b65d3742b804e$lut for cells of type $lut.
-Using template $paramod$e1840c0be782a01861424c8c31cbd34dbfdd5c6b$lut for cells of type $lut.
-Using template $paramod$6eaff21d3c29251343ef497052cf2c77fea3c8e9$lut for cells of type $lut.
-Using template $paramod$bd3d5d70b6736042ee72c7cfa4b378bb2545027a$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00110101 for cells of type $lut.
-Using template $paramod$4c16846b865fc2042d2fe6609db82a1f76c8dda3$lut for cells of type $lut.
-Using template $paramod$399fceca93c3df0deeab87c0d4cb5e65aed2f28e$lut for cells of type $lut.
-Using template $paramod$f9e32c775c0da47ad08d67cb2da4f3e9280c99d1$lut for cells of type $lut.
+Using template $paramod$31d0fe9872e147e32329f1888afc564130486200$lut for cells of type $lut.
+Using template $paramod$3357e04690749b6c89de0fcd28f53cd216bd2047$lut for cells of type $lut.
 Using template $paramod$33e58adf67c6b686a154c9ce8ebbc4b04b8cabc5$lut for cells of type $lut.
-Using template $paramod$52acd744af558b1acd7f06b0e1d721506b042b9b$lut for cells of type $lut.
-Using template $paramod$4f4b8fc203f5e5f28456abb41eaf0848d148a9cd$lut for cells of type $lut.
-Using template $paramod$658b9ed803f0d3d335616d3858b53e0a2522f1e8$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'1001 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00010000 for cells of type $lut.
-Using template $paramod$cf652acbfbf67d2248e3045cd0f09c58ca55886c$lut for cells of type $lut.
-Using template $paramod$8adf7fbd410d2cc654c288d5be5f7508ee8809b0$lut for cells of type $lut.
-Using template $paramod$571404c0889eaf57f492cb5e37f8acb5df5852f9$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'1110 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00001000 for cells of type $lut.
-Using template $paramod$d5bad5e18af47508d78e789de0f18789d1673808$lut for cells of type $lut.
-Using template $paramod$251994398653c4cf8de320f1e306e535d5d2d624$lut for cells of type $lut.
 Using template $paramod$04be0c2ca247b7a64a6cdd23e00acec3d80990df$lut for cells of type $lut.
-Using template $paramod$a9ba23df824f693c44e722629fd8c1fae157385c$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00100000 for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00110010 for cells of type $lut.
+Using template $paramod$4f4b8fc203f5e5f28456abb41eaf0848d148a9cd$lut for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00001000 for cells of type $lut.
+Using template $paramod$872def176acf0af46aee1a4df67a9291309e3c01$lut for cells of type $lut.
+Using template $paramod$e5ab8a602304b91c83a2d78c56e895541f6ec7f9$lut for cells of type $lut.
 Using template $paramod$23ba03b3f106a8b0f20f18bfebd862b419996ddc$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'01010100 for cells of type $lut.
 Using template $paramod$7303c8724c0d10a784c82507b570f15eaacab31e$lut for cells of type $lut.
-Using template $paramod$9ee136c48a1105b213fb8794fd5179e8f5da68e1$lut for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'10000000 for cells of type $lut.
+Using template $paramod$7e9df0afb32b76fe5fce0691b8752aca650057fa$lut for cells of type $lut.
+Using template $paramod$1f313f85ef575d13bac75382f04905a8c8be8f57$lut for cells of type $lut.
 Using template $paramod$b8f75cf9c6c06c079da053f4aa60c4d5363c32b3$lut for cells of type $lut.
-Using template $paramod$cdfb4ce36e9b97ab980954e4bd7262833a7086a8$lut for cells of type $lut.
-Using template $paramod$1ad9ca75a5e52e69f39f16c0b8ffb14773a0b7f2$lut for cells of type $lut.
-Using template $paramod$e6cfc2a250ad5b0b3da266fa46a057a6eca6e3d9$lut for cells of type $lut.
-Using template $paramod$0c01498a7324c09c7e2d60e38263122d9ce51663$lut for cells of type $lut.
 Using template $paramod$lut\WIDTH=32'00000000000000000000000000000001\LUT=2'01 for cells of type $lut.
-Using template $paramod$5c2732983d3646a7594063533cfb2731855eb5a9$lut for cells of type $lut.
-Using template $paramod$d3b97388d4dae3c4a095d64aa194a489a2b2c163$lut for cells of type $lut.
+Using template $paramod$608bfa4cadde49bc6aabb8258287149eef9120b5$lut for cells of type $lut.
+Using template $paramod$e90d1d85e8715c4a31c1c4766a1ba361aa1cb4a6$lut for cells of type $lut.
+Using template $paramod$d70a3a87a6cf17f20facfbbe6ae12d091937aeea$lut for cells of type $lut.
 Using template $paramod$c3fd3e994b771b14afbab892140530dcc34690d1$lut for cells of type $lut.
 Using template $paramod$3cf6a1df1ed4ab633884e413c73298329869888c$lut for cells of type $lut.
 Using template $paramod$4e47f3639a3a618ad6c34e97c9b4c8fef0025602$lut for cells of type $lut.
-Using template $paramod$8809607ce77a49603aaaabd3cd5de3b824f5ae5f$lut for cells of type $lut.
-Using template $paramod$9d7b7b647bdfb84c8d2e249b3daf583559e1695e$lut for cells of type $lut.
-Using template $paramod$ec1483f49ec2a78cf4b338adbdb3405e96e75ba1$lut for cells of type $lut.
-Using template $paramod$6a9e6a7be18da3b2738a3c440c25aefc246735de$lut for cells of type $lut.
 No more expansions possible.
-<suppressed ~1305 debug messages>
+<suppressed ~1137 debug messages>
 
 17.52. Executing XILINX_DFFOPT pass (optimize FF control signal usage).
 Optimizing FFs in $paramod$7f595c5653714afffb8c867c7e5cbc7e6db5ca09\instr_mem.
@@ -2694,42 +2688,10 @@ Optimizing FFs in harvard_top.
 17.53. Executing OPT_LUT_INS pass (discard unused LUT inputs).
 Optimizing LUTs in $paramod$7f595c5653714afffb8c867c7e5cbc7e6db5ca09\instr_mem.
 Optimizing LUTs in harvard_top.
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39080.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39078.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39077.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39076.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39075.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39074.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39073.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39072.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39071.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39070.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39069.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39068.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39067.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39066.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39065.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39064.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39063.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39062.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39061.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39060.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39059.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39058.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39057.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39056.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39055.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39054.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39053.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39052.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39051.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39050.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39049.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
-  Optimizing lut $auto$abc_ops_reintegrate.cc:722:reintegrate$39079.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 1)
 
 17.54. Executing CLKBUFMAP pass (inserting clock buffers).
 Inserting BUFG on harvard_top.u_core.clk[0].
-Removed 0 unused cells and 1041 unused wires.
+Removed 0 unused cells and 865 unused wires.
 
 17.55. Executing HIERARCHY pass (managing design hierarchy).
 Attribute `top' found on module `harvard_top'. Setting top module to harvard_top.
@@ -2748,72 +2710,68 @@ Removed 1 unused modules.
 
         +----------Local Count, excluding submodules.
         | 
-      970 wires
-     2256 wire bits
-       55 public wires
-      489 public wire bits
-        8 ports
-      163 port bits
-      617 cells
+      874 wires
+     1964 wire bits
+       56 public wires
+      490 public wire bits
+        9 ports
+      164 port bits
+      559 cells
        11   $scopeinfo
         1   BUFG
         2   IBUF
        13   INV
-       32   LUT1
-      134   LUT2
-       30   LUT3
-       65   LUT4
-       57   LUT5
-       78   LUT6
-      161   OBUF
+      116   LUT2
+       33   LUT3
+       52   LUT4
+       63   LUT5
+       73   LUT6
+      162   OBUF
        32   RAM256X1S
         1   instr_mem
-      305 submodules
+      273 submodules
        67   CARRY4
       194   FDRE
-       32   MUXF7
        12   RAM32M
 
-   Estimated number of LCs:        250
+   Estimated number of LCs:        237
 
 === design hierarchy ===
 
         +----------Count including submodules.
         | 
-      617 harvard_top
+      559 harvard_top
 
         +----------Count including submodules.
         | 
-      970 wires
-     2256 wire bits
-       55 public wires
-      489 public wire bits
-        8 ports
-      163 port bits
+      874 wires
+     1964 wire bits
+       56 public wires
+      490 public wire bits
+        9 ports
+      164 port bits
         - memories
         - memory bits
         - processes
-      617 cells
+      559 cells
        11   $scopeinfo
         1   BUFG
         2   IBUF
        13   INV
-       32   LUT1
-      134   LUT2
-       30   LUT3
-       65   LUT4
-       57   LUT5
-       78   LUT6
-      161   OBUF
+      116   LUT2
+       33   LUT3
+       52   LUT4
+       63   LUT5
+       73   LUT6
+      162   OBUF
        32   RAM256X1S
         1   instr_mem
-      305 submodules
+      273 submodules
        67   CARRY4
       194   FDRE
-       32   MUXF7
        12   RAM32M
 
-   Estimated number of LCs:        250
+   Estimated number of LCs:        237
 
 17.57. Executing CHECK pass (checking for obvious problems).
 Checking module harvard_top...
@@ -2825,31 +2783,29 @@ Found and reported 0 problems.
 
         +----------Local Count, excluding submodules.
         | 
-      970 wires
-     2256 wire bits
-       55 public wires
-      489 public wire bits
-        8 ports
-      163 port bits
-      922 cells
+      874 wires
+     1964 wire bits
+       56 public wires
+      490 public wire bits
+        9 ports
+      164 port bits
+      832 cells
        11   $scopeinfo
         1   BUFG
        67   CARRY4
       194   FDRE
         2   IBUF
        13   INV
-       32   LUT1
-      134   LUT2
-       30   LUT3
-       65   LUT4
-       57   LUT5
-       78   LUT6
-       32   MUXF7
-      161   OBUF
+      116   LUT2
+       33   LUT3
+       52   LUT4
+       63   LUT5
+       73   LUT6
+      162   OBUF
        32   RAM256X1S
        12   RAM32M
         1   instr_mem
 
-End of script. Logfile hash: f12e9a6b12, time: 3.09s, user: 2.65s, system: 0.11s, MEM: 144.86 MB peak
+End of script. Logfile hash: b3319a2152, time: 2.97s, user: 2.61s, system: 0.09s, MEM: 148.41 MB peak
 Yosys 0.71+post (git sha1 5628c13240f670b97aaaca3d47940c4afb8ff572, Release, AppleClang clang++ 21.0.0.21000401)
-Time spent: 63% 41x read_verilog (1 sec), 7% 12x techmap (0 sec), ...
+Time spent: 61% 41x read_verilog (1 sec), 7% 12x techmap (0 sec), ...

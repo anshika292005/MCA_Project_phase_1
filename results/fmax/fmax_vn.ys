@@ -1,0 +1,12 @@
+# Fmax estimate for vn_top on a Lattice ECP5 (LFE5U-85F) with the open-source flow
+# (Yosys + nextpnr-ecp5). Run from the repository root via results/fmax/run_fmax.sh.
+# Loaded with the same random program image as the Harvard run, for a like-for-like comparison.
+read_verilog rtl/mem/addr_decoder.v rtl/baseline/shared_mem.v rtl/baseline/cpu_core_vn.v
+read_verilog rtl/core/regfile.v rtl/core/alu.v rtl/core/imm_gen.v rtl/core/control.v
+read_verilog rtl/common/perf_counters.v rtl/baseline/vn_top.v
+chparam -set PROG_FILE "results/synth/rom_random.hex" -set DATA_FILE "programs/memcopy_data.hex" vn_top
+hierarchy -top vn_top
+proc
+delete t:$meminit_v2 r:WORDS=1 %i
+synth_ecp5 -top vn_top -json results/fmax/vn_ecp5.json
+tee -o results/fmax/vn_ecp5_stat.txt stat

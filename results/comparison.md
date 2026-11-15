@@ -13,6 +13,20 @@ registers, all 256 data words and `out_port` are identical on both designs.
 
 Baseline simultaneous cycles are 0 for every program (one memory port).
 
+## Waveforms
+
+GTKWave screenshots in `results/waves/`:
+
+- [gtkwave_memcopy_first_load.png](waves/gtkwave_memcopy_first_load.png): `tb_compare`,
+  memcopy, 0-190 ns, both designs (view `sim/waves.gtkw`). The first LW and SW (55-75 ns) use
+  the data port in the same cycle as their fetch on Harvard (`h_sim` counts them); the baseline
+  needs an extra cycle with `state`/`m_is_data` = 1 for each, and `v_sim` stays 0.
+- [gtkwave_basic_memctrl.png](waves/gtkwave_basic_memctrl.png): `tb_harvard_top`, basic,
+  65-185 ns (view `sim/memctrl.gtkw`). At 155-175 ns the SW and LW to `0x808` raise
+  `addr_fault`/`d_fault` with `ram_we` = 0 and `d_rdata` = 0; at 115-125 ns `addr_fault` is 1
+  but `d_fault` stays 0 because no access is made; at 175 ns the SW to `0x400` sets
+  `sel_io`/`io_we`.
+
 ## How to read it
 
 - Harvard CPI is exactly 1.00: the fetch uses the instruction memory and LW/SW use the data
@@ -46,10 +60,10 @@ yosys -l results/logs/synth_vn.log      results/synth/synth_vn.ys
 
 | Design | Logic LUTs | LUT-RAM (LUTs) | Total LUTs | Flip-flops | CARRY4 | Fmax |
 |---|---|---|---|---|---|---|
-| harvard_top: core, data side, counters | 409 | 176 (data RAM 128, regfile 48) | 585 | 194 | 67 | not measured |
+| harvard_top: core, data side, counters | 350 | 176 (data RAM 128, regfile 48) | 526 | 194 | 67 | |
 | harvard_top: instruction ROM (256 x 32) | 128 (+64 MUXF7, 32 MUXF8) | 0 | 128 | 0 | 0 | |
-| **harvard_top total** | **537** | **176** | **713** | **194** | **67** | see Fmax section |
-| **vn_top total** | **776** | **304** (shared mem 256, regfile 48) | **1080** | **227** | **66** | see Fmax section |
+| **harvard_top total** | **478** | **176** | **654** | **194** | **67** | see Fmax section |
+| **vn_top total** | **780** | **304** (shared mem 256, regfile 48) | **1084** | **227** | **66** | see Fmax section |
 
 How the numbers were counted:
 
@@ -83,8 +97,14 @@ Things to know before quoting these numbers:
    macOS, so Fmax was measured on a Lattice ECP5 instead (next section). A Vivado run on an
    Artix-7 board is planned for Phase II.
 5. These are Yosys estimates after synthesis, not Vivado utilisation after place and route.
+6. **Logic-LUT counts move with the tool build.** ABC's mapping heuristics differ between
+   Yosys builds: the earlier version of this table (409 logic LUTs for the Harvard core) came
+   from a different 0.71 build, and the same RTL gives 369 on the build used now. The table
+   above was regenerated after `d_fault` became a top-level output of both designs, and it
+   matches `results/synth/*_stat.txt` and `results/logs/synth_*.log`. LUT-RAM, flip-flop and
+   CARRY4 counts did not change. Treat logic LUTs as accurate to roughly ±10%.
 
-**Result:** the Harvard design needs about 34% fewer LUTs (713 vs 1080) and 33 fewer
+**Result:** the Harvard design needs about 40% fewer LUTs (654 vs 1084) and 33 fewer
 flip-flops than the shared-memory baseline, while running every program in fewer cycles. The
 split memory costs a separate ROM (128 LUTs), but the baseline pays more for a 512-word memory,
 the latched instruction register, the two-state controller and the address muxing in front of
@@ -101,10 +121,10 @@ here, because its read delay is on the critical path; it holds the pseudo-random
 
 | Build | Critical path (register → register) | Delay | Fmax |
 |---|---|---|---|
-| harvard_top | ROM (block RAM) → regfile → ALU → data RAM → regfile write | 23.29 ns | **42.94 MHz** |
-| vn_top, fetch leg | PC → shared mem (512-word LUT-RAM) → decode → regfile → ALU compare → PC | 26.83 ns | 37.27 MHz |
-| vn_top, MEM leg | latched `ir` → regfile → ALU → shared mem → regfile write | 18.88 ns | 52.97 MHz |
-| **vn_top** | slower of the two legs | 26.83 ns | **37.27 MHz** |
+| harvard_top | ROM (block RAM) → regfile → ALU → data RAM → regfile write | 22.93 ns | **43.62 MHz** |
+| vn_top, fetch leg | PC → shared mem (512-word LUT-RAM) → decode → regfile → ALU compare → PC | 26.77 ns | 37.36 MHz |
+| vn_top, MEM leg | latched `ir` → regfile → ALU → shared mem → `ir` input (see note) | 18.65 ns | 53.63 MHz |
+| **vn_top** | slower of the two legs | 26.77 ns | **37.36 MHz** |
 
 **Why vn_top is timed in two builds.** nextpnr cannot time a design that contains
 combinational loops, and vn_top has two that can never be active (point 3 above, plus
@@ -118,14 +138,23 @@ both legs) exist in neither. A gate-level `yosys check` finds 0 loops in both co
 the original). vn_top's Fmax is the minimum of the two legs. Each critical path above was
 checked to read memory only once.
 
+Note on the MEM leg: its critical path ends at the input of the `ir` register, which is only
+loaded in FETCH_EXEC, so in the real design this exact path is never captured. It is about
+as long as the real MEM-state path (shared-mem read → LW write-back, 18.88 ns in an earlier
+run), and the MEM leg does not set the baseline clock anyway (the fetch leg does).
+
+These numbers are from the run after `d_fault` became a top-level output of both designs
+(164 I/O instead of 163). The previous run gave 42.94 / 37.27 / 52.97 MHz; the small change is
+normal place-and-route variation.
+
 **Execution time = cycles / Fmax:**
 
 | Program | Harvard cycles | Harvard time | Baseline cycles | Baseline time | Speed-up |
 |---|---|---|---|---|---|
-| basic      | 19 |  442 ns | 26 |  698 ns | 1.58x |
-| array_sum  | 38 |  885 ns | 48 | 1288 ns | 1.46x |
-| memcopy    | 54 | 1258 ns | 71 | 1905 ns | 1.51x |
-| count_loop | 64 | 1490 ns | 65 | 1744 ns | 1.17x |
+| basic      | 19 |  436 ns | 26 |  696 ns | 1.60x |
+| array_sum  | 38 |  871 ns | 48 | 1285 ns | 1.47x |
+| memcopy    | 54 | 1238 ns | 71 | 1900 ns | 1.54x |
+| count_loop | 64 | 1467 ns | 65 | 1740 ns | 1.19x |
 
 **Result:** the Harvard design is faster in clock frequency as well as CPI. Its single cycle
 contains two memory reads (ROM and data RAM), but the ROM is a small block RAM and the data RAM

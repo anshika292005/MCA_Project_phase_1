@@ -5,27 +5,25 @@
 
         +----------Local Count, excluding submodules.
         | 
-      970 wires
-     2256 wire bits
-       55 public wires
-      489 public wire bits
-        8 ports
-      163 port bits
-      922 cells
+      874 wires
+     1964 wire bits
+       56 public wires
+      490 public wire bits
+        9 ports
+      164 port bits
+      832 cells
        11   $scopeinfo
         1   BUFG
        67   CARRY4
       194   FDRE
         2   IBUF
        13   INV
-       32   LUT1
-      134   LUT2
-       30   LUT3
-       65   LUT4
-       57   LUT5
-       78   LUT6
-       32   MUXF7
-      161   OBUF
+      116   LUT2
+       33   LUT3
+       52   LUT4
+       63   LUT5
+       73   LUT6
+      162   OBUF
        32   RAM256X1S
        12   RAM32M
         1   instr_mem

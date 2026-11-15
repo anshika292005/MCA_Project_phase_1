@@ -1,0 +1,442 @@
+
+
+Info: Logic utilisation before packing:
+Info:     Total LUT4s:      3657/83640     4%
+Info:         logic LUTs:   1675/83640     2%
+Info:         carry LUTs:    254/83640     0%
+Info:           RAM LUTs:   1152/10455    11%
+Info:          RAMW LUTs:    576/20910     2%
+
+Info:      Total DFFs:       227/83640     0%
+
+Info: Packing IOs..
+Info: Packing constants..
+Info: Packing carries...
+Info: Packing LUTs...
+Info: Packing LUT5-7s...
+Info: Packing FFs...
+Info:     184 FFs paired with LUTs.
+Info: Generating derived timing constraints...
+Info: Promoting globals...
+Info:     promoting clock net clk$TRELLIS_IO_IN to global network
+Info: Checksum: 0xa89753d0
+
+Info: Device utilisation:
+Info: 	          TRELLIS_IO:     164/    365    44%
+Info: 	                DCCA:       1/     56     1%
+Info: 	              DP16KD:       0/    208     0%
+Info: 	          MULT18X18D:       0/    156     0%
+Info: 	              ALU54B:       0/     78     0%
+Info: 	             EHXPLLL:       0/      4     0%
+Info: 	             EXTREFB:       0/      2     0%
+Info: 	                DCUA:       0/      2     0%
+Info: 	           PCSCLKDIV:       0/      2     0%
+Info: 	             IOLOGIC:       0/    224     0%
+Info: 	            SIOLOGIC:       0/    141     0%
+Info: 	                 GSR:       0/      1     0%
+Info: 	               JTAGG:       0/      1     0%
+Info: 	                OSCG:       0/      1     0%
+Info: 	               SEDGA:       0/      1     0%
+Info: 	                 DTR:       0/      1     0%
+Info: 	             USRMCLK:       0/      1     0%
+Info: 	             CLKDIVF:       0/      4     0%
+Info: 	           ECLKSYNCB:       0/     10     0%
+Info: 	             DLLDELD:       0/      8     0%
+Info: 	              DDRDLL:       0/      4     0%
+Info: 	             DQSBUFM:       0/     14     0%
+Info: 	     TRELLIS_ECLKBUF:       0/      8     0%
+Info: 	        ECLKBRIDGECS:       0/      2     0%
+Info: 	                DCSC:       0/      2     0%
+Info: 	                 GND:       1/      1   100%
+Info: 	          TRELLIS_FF:     227/  83640     0%
+Info: 	                 VCC:       1/      1   100%
+Info: 	        TRELLIS_COMB:    3689/  83640     4%
+Info: 	        TRELLIS_RAMW:     288/  10455     2%
+
+Info: Placed 2 cells based on constraints.
+Info: Creating initial analytic placement for 1566 cells, random placement wirelen = 230063.
+Info:     at initial placer iter 0, wirelen = 16767
+Info:     at initial placer iter 1, wirelen = 14521
+Info:     at initial placer iter 2, wirelen = 13983
+Info:     at initial placer iter 3, wirelen = 13810
+Info: Running main analytical placer, max placement attempts per cell = 2388205.
+Info:     at iteration #1, type ALL: wirelen solved = 13821, spread = 32503, legal = 32727; time = 0.04s
+Info:     at iteration #2, type ALL: wirelen solved = 14194, spread = 29085, legal = 29262; time = 0.04s
+Info:     at iteration #3, type ALL: wirelen solved = 14621, spread = 27083, legal = 27470; time = 0.03s
+Info:     at iteration #4, type ALL: wirelen solved = 14888, spread = 25697, legal = 25923; time = 0.03s
+Info:     at iteration #5, type ALL: wirelen solved = 15456, spread = 26867, legal = 27275; time = 0.03s
+Info:     at iteration #6, type ALL: wirelen solved = 16007, spread = 25835, legal = 26265; time = 0.03s
+Info:     at iteration #7, type ALL: wirelen solved = 16388, spread = 25085, legal = 25497; time = 0.03s
+Info:     at iteration #8, type ALL: wirelen solved = 16678, spread = 25118, legal = 25597; time = 0.03s
+Info:     at iteration #9, type ALL: wirelen solved = 16872, spread = 25293, legal = 25640; time = 0.03s
+Info:     at iteration #10, type ALL: wirelen solved = 17193, spread = 24674, legal = 25124; time = 0.03s
+Info:     at iteration #11, type ALL: wirelen solved = 17575, spread = 25130, legal = 25444; time = 0.03s
+Info:     at iteration #12, type ALL: wirelen solved = 17656, spread = 24454, legal = 24739; time = 0.03s
+Info:     at iteration #13, type ALL: wirelen solved = 17736, spread = 24564, legal = 24885; time = 0.03s
+Info:     at iteration #14, type ALL: wirelen solved = 17861, spread = 23958, legal = 24279; time = 0.03s
+Info:     at iteration #15, type ALL: wirelen solved = 17988, spread = 23442, legal = 23916; time = 0.03s
+Info:     at iteration #16, type ALL: wirelen solved = 17979, spread = 23750, legal = 24169; time = 0.03s
+Info:     at iteration #17, type ALL: wirelen solved = 18072, spread = 23693, legal = 24075; time = 0.03s
+Info:     at iteration #18, type ALL: wirelen solved = 18170, spread = 23374, legal = 23750; time = 0.04s
+Info:     at iteration #19, type ALL: wirelen solved = 18377, spread = 23363, legal = 23734; time = 0.03s
+Info:     at iteration #20, type ALL: wirelen solved = 18477, spread = 23410, legal = 23781; time = 0.04s
+Info:     at iteration #21, type ALL: wirelen solved = 18650, spread = 23193, legal = 23612; time = 0.03s
+Info:     at iteration #22, type ALL: wirelen solved = 18602, spread = 23257, legal = 23649; time = 0.04s
+Info:     at iteration #23, type ALL: wirelen solved = 18721, spread = 23299, legal = 23705; time = 0.04s
+Info:     at iteration #24, type ALL: wirelen solved = 18808, spread = 23256, legal = 23658; time = 0.03s
+Info:     at iteration #25, type ALL: wirelen solved = 18974, spread = 23243, legal = 23648; time = 0.03s
+Info: HeAP Placer Time: 1.23s
+Info:   of which solving equations: 0.76s
+Info:   of which spreading cells: 0.08s
+Info:   of which strict legalisation: 0.03s
+
+Info: Running simulated annealing placer for refinement.
+Info:   at iteration #1: temp = 0.000000, timing cost = 3776, wirelen = 23612
+Info:   at iteration #5: temp = 0.000000, timing cost = 4312, wirelen = 19673
+Info:   at iteration #10: temp = 0.000000, timing cost = 4036, wirelen = 19090
+Info:   at iteration #15: temp = 0.000000, timing cost = 3387, wirelen = 18764
+Info:   at iteration #19: temp = 0.000000, timing cost = 3223, wirelen = 18666 
+Info: SA placement time 1.66s
+
+Info: Max frequency for clock '$glbnet$clk$TRELLIS_IO_IN': 31.70 MHz (FAIL at 100.00 MHz)
+
+Info: Max delay <async>                           -> posedge $glbnet$clk$TRELLIS_IO_IN: 11.54 ns
+Info: Max delay posedge $glbnet$clk$TRELLIS_IO_IN -> <async>                          : 22.32 ns
+
+Info: Slack histogram:
+Info:  legend: times are in ps
+Info:          * represents 55 endpoint(s)
+Info:          + represents [1,55) endpoint(s)
+Info: [-21541, -20001) |+
+Info: [-20001, -18461) | 
+Info: [-18461, -16921) |+
+Info: [-16921, -15381) |*+
+Info: [-15381, -13841) |**********+
+Info: [-13841, -12301) |************+
+Info: [-12301, -10761) |*******+
+Info: [-10761,  -9221) |********+
+Info: [ -9221,  -7681) |***+
+Info: [ -7681,  -6141) |*+
+Info: [ -6141,  -4601) |*****+
+Info: [ -4601,  -3061) |**+
+Info: [ -3061,  -1521) |+
+Info: [ -1521,     19) |+
+Info: [    19,   1559) | 
+Info: [  1559,   3099) | 
+Info: [  3099,   4639) |+
+Info: [  4639,   6179) |*************+
+Info: [  6179,   7719) |************************************************************ 
+Info: [  7719,   9259) |**+
+Info: Checksum: 0x4a51015e
+Info: Routing globals...
+Info:     routing clock net $glbnet$clk$TRELLIS_IO_IN using global 0
+
+Info: Routing..
+Info: Setting up routing queue.
+Info: Routing 18245 arcs.
+Info:            |   (re-)routed arcs  |   delta    | remaining|       time spent     |
+Info:    IterCnt |  w/ripup   wo/ripup |  w/r  wo/r |      arcs| batch(sec) total(sec)|
+Info:       1000 |      109        890 |  109   890 |     17656|       0.20       0.20|
+Info:       2000 |      174       1825 |   65   935 |     17404|       0.10       0.30|
+Info:       3000 |      264       2735 |   90   910 |     16591|       0.09       0.39|
+Info:       4000 |      362       3637 |   98   902 |     16170|       0.10       0.49|
+Info:       5000 |      434       4565 |   72   928 |     15300|       0.10       0.59|
+Info:       6000 |      547       5452 |  113   887 |     14583|       0.11       0.70|
+Info:       7000 |      621       6378 |   74   926 |     13722|       0.10       0.80|
+Info:       8000 |      725       7274 |  104   896 |     12909|       0.10       0.90|
+Info:       9000 |      845       8154 |  120   880 |     12373|       0.10       1.00|
+Info:      10000 |      992       9007 |  147   853 |     11602|       0.10       1.10|
+Info:      11000 |     1232       9767 |  240   760 |     10966|       0.10       1.20|
+Info:      12000 |     1469      10530 |  237   763 |     10781|       0.11       1.31|
+Info:      13000 |     1696      11303 |  227   773 |     10255|       0.13       1.45|
+Info:      14000 |     2041      11958 |  345   655 |      9929|       0.15       1.59|
+Info:      15000 |     2507      12492 |  466   534 |      9640|       0.13       1.72|
+Info:      16000 |     2932      13067 |  425   575 |      9233|       0.15       1.87|
+Info:      17000 |     3405      13594 |  473   527 |      8944|       0.14       2.02|
+Info:      18000 |     3923      14076 |  518   482 |      8615|       0.14       2.16|
+Info:      19000 |     4405      14594 |  482   518 |      8348|       0.12       2.28|
+Info:      20000 |     5017      14982 |  612   388 |      8068|       0.13       2.41|
+Info:      21000 |     5557      15442 |  540   460 |      7819|       0.12       2.54|
+Info:      22000 |     6040      15959 |  483   517 |      7578|       0.12       2.66|
+Info:      23000 |     6540      16447 |  500   488 |      7170|       0.11       2.76|
+Info:      24000 |     6996      16912 |  456   465 |      6715|       0.10       2.86|
+Info:      25000 |     7611      17276 |  615   364 |      6471|       0.13       2.99|
+Info:      26000 |     7963      17903 |  352   627 |      6224|       0.11       3.10|
+Info:      27000 |     8474      18377 |  511   474 |      5836|       0.11       3.21|
+Info:      28000 |     8883      18947 |  409   570 |      5303|       0.09       3.31|
+Info:      29000 |     8899      19863 |   16   916 |      4322|       0.04       3.34|
+Info:      30000 |     9052      20709 |  153   846 |      3675|       0.09       3.43|
+Info:      31000 |     9087      21658 |   35   949 |      2718|       0.09       3.52|
+Info:      32000 |     9087      22610 |    0   952 |      1718|       0.02       3.54|
+Info:      33000 |     9087      23594 |    0   984 |       718|       0.02       3.55|
+Info:      33822 |     9128      24246 |   41   652 |         0|       0.27       3.82|
+Info: Routing complete.
+Info: Router1 time 3.82s
+Info: Checksum: 0xc3462618
+
+Info: Critical path report for clock '$glbnet$clk$TRELLIS_IO_IN' (posedge -> posedge):
+Info:       type curr  total name
+Info:   clk-to-q  0.52  0.52 Source u_dec.addr_TRELLIS_FF_Q_26.Q
+Info:    routing  0.93  1.45 Net u_dec.addr[21] (17,13) -> (17,12)
+Info:                          Sink d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1_D_PFUMX_Z_C0_LUT4_Z.C
+Info:                          Defined in:
+Info:                               rtl/mem/addr_decoder.v:11.24-11.28
+Info:      logic  0.24  1.69 Source d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1_D_PFUMX_Z_C0_LUT4_Z.F
+Info:    routing  0.37  2.05 Net d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1_D_PFUMX_Z_C0[4] (17,12) -> (17,12)
+Info:                          Sink d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1_D_PFUMX_Z_BLUT_LUT4_Z.M
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.26  2.31 Source d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1_D_PFUMX_Z_BLUT_LUT4_Z.OFX
+Info:    routing  0.68  2.99 Net d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1_D[3] (17,12) -> (19,11)
+Info:                          Sink d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  3.22 Source d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1.F
+Info:    routing  0.76  3.99 Net d_fault_LUT4_Z_B_LUT4_Z_D[3] (19,11) -> (18,9)
+Info:                          Sink d_fault_LUT4_Z_B_LUT4_Z.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  4.22 Source d_fault_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.78  5.01 Net d_fault_LUT4_Z_B[1] (18,9) -> (17,8)
+Info:                          Sink data_ram_LUT4_Z.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  5.24 Source data_ram_LUT4_Z.F
+Info:    routing  0.56  5.80 Net data_ram (17,8) -> (17,7)
+Info:                          Sink u_mem.mem.0.77_DO_LUT4_Z.A
+Info:                          Defined in:
+Info:                               rtl/baseline/vn_top.v:55.10-55.18
+Info:      logic  0.24  6.03 Source u_mem.mem.0.77_DO_LUT4_Z.F
+Info:    routing  1.01  7.04 Net u_mem.mem.0.64_DO_1[5] (17,7) -> (18,4)
+Info:                          Sink u_mem.mem.0.37_DO_2_LUT4_B_Z_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.M
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.26  7.30 Source u_mem.mem.0.37_DO_2_LUT4_B_Z_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.OFX
+Info:    routing  0.55  7.85 Net u_mem.mem.0.37_DO_2_LUT4_B_Z[3] (18,4) -> (18,4)
+Info:                          Sink u_mem.mem.0.141_DO_3_LUT4_B_Z_LUT4_C_Z_LUT4_Z.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  8.09 Source u_mem.mem.0.141_DO_3_LUT4_B_Z_LUT4_C_Z_LUT4_Z.F
+Info:    routing  1.29  9.38 Net u_mem.mem.0.141_DO_3_LUT4_B_Z_LUT4_C_Z[1] (18,4) -> (21,8)
+Info:                          Sink u_core.u_regfile.regs.1.8_DO_LUT4_Z_C_L6MUX21_Z_D1_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.M
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.26  9.63 Source u_core.u_regfile.regs.1.8_DO_LUT4_Z_C_L6MUX21_Z_D1_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.OFX
+Info:    routing  0.00  9.63 Net u_core.u_regfile.regs.1.8_DO_LUT4_Z_C_L6MUX21_Z_D1 (21,8) -> (21,8)
+Info:                          Sink u_core.u_regfile.regs.1.8_DO_LUT4_Z_C_L6MUX21_Z_D1_L6MUX21_Z_D0_PFUMX_Z_ALUT_LUT4_Z.FXB
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:157.70-157.72
+Info:      logic  0.24  9.88 Source u_core.u_regfile.regs.1.8_DO_LUT4_Z_C_L6MUX21_Z_D1_L6MUX21_Z_D0_PFUMX_Z_ALUT_LUT4_Z.OFX
+Info:    routing  2.03  11.90 Net u_core.u_regfile.regs.1.8_DO_LUT4_Z_C[2] (21,8) -> (11,16)
+Info:                          Sink u_core.u_regfile.regs.1.8_DO_LUT4_Z.C
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  12.14 Source u_core.u_regfile.regs.1.8_DO_LUT4_Z.F
+Info:    routing  1.58  13.72 Net u_mem.mem.0.6_DO_LUT4_B_Z_LUT4_C_Z_LUT4_D_Z_PFUMX_ALUT_Z_L6MUX21_D1_Z_LUT4_D_Z[1] (11,16) -> (18,23)
+Info:                          Sink u_core.u_regfile.regs.1.4_DO_3_LUT4_Z.C
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  13.96 Source u_core.u_regfile.regs.1.4_DO_3_LUT4_Z.F
+Info:    routing  1.47  15.43 Net u_core.u_regfile.regs.1.2_DO[3] (18,23) -> (9,24)
+Info:                          Sink u_core.u_regfile.regs.1.2_DO_1_LUT4_C.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  15.66 Source u_core.u_regfile.regs.1.2_DO_1_LUT4_C.F
+Info:    routing  1.52  17.19 Net u_core.u_regfile.regs.1.2_DO_1_LUT4_C_Z[2] (9,24) -> (13,20)
+Info:                          Sink u_core.u_regfile.regs.0.2_DO_1_LUT4_B_Z_LUT4_Z.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  17.42 Source u_core.u_regfile.regs.0.2_DO_1_LUT4_B_Z_LUT4_Z.F
+Info:    routing  1.13  18.56 Net u_core.u_regfile.regs.0.2_DO_1_LUT4_B_Z[2] (13,20) -> (12,19)
+Info:                          Sink u_core.ir_TRELLIS_FF_Q_21_DI_LUT4_Z_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_CCU2C_S0_CIN_CCU2C_COUT_CIN_CCU2C_COUT_CIN_CCU2C_COUT_S1_CCU2C_S1_CIN_CCU2C_COUT$CCU2_COMB1.B
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.45  19.00 Source u_core.ir_TRELLIS_FF_Q_21_DI_LUT4_Z_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_CCU2C_S0_CIN_CCU2C_COUT_CIN_CCU2C_COUT_CIN_CCU2C_COUT_S1_CCU2C_S1_CIN_CCU2C_COUT$CCU2_COMB1.FCO
+Info:    routing  0.00  19.00 Net u_core.ir_TRELLIS_FF_Q_21_DI_LUT4_Z_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_CCU2C_S0_CIN_CCU2C_COUT_CIN_CCU2C_COUT_CIN_CCU2C_COUT_S1_CCU2C_S1_CIN (12,19) -> (12,19)
+Info:                          Sink u_core.ir_TRELLIS_FF_Q_21_DI_LUT4_Z_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_CCU2C_S0_CIN_CCU2C_COUT_CIN_CCU2C_COUT_CIN_CCU2C_COUT_S1_CCU2C_S1$CCU2_COMB0.FCI
+Info:                          Defined in:
+Info:                               rtl/core/alu.v:17.26-17.31
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/arith_map_ccu2c.v:74.7-80.4
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/ccu2c_sim.vh:9.9-9.13
+Info:      logic  0.07  19.08 Source u_core.ir_TRELLIS_FF_Q_21_DI_LUT4_Z_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_CCU2C_S0_CIN_CCU2C_COUT_CIN_CCU2C_COUT_CIN_CCU2C_COUT_S1_CCU2C_S1$CCU2_COMB0.FCO
+Info:    routing  0.00  19.08 Net u_core.ir_TRELLIS_FF_Q_21_DI_LUT4_Z_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_CCU2C_S0_CIN_CCU2C_COUT_CIN_CCU2C_COUT_CIN_CCU2C_COUT_S1_CCU2C_S1$CCU2_FCI_INT (12,19) -> (12,19)
+Info:                          Sink u_core.ir_TRELLIS_FF_Q_21_DI_LUT4_Z_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_CCU2C_S0_CIN_CCU2C_COUT_CIN_CCU2C_COUT_CIN_CCU2C_COUT_S1_CCU2C_S1$CCU2_COMB1.FCI
+Info:      logic  0.00  19.08 Source u_core.ir_TRELLIS_FF_Q_21_DI_LUT4_Z_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_CCU2C_S0_CIN_CCU2C_COUT_CIN_CCU2C_COUT_CIN_CCU2C_COUT_S1_CCU2C_S1$CCU2_COMB1.FCO
+Info:    routing  0.00  19.08 Net u_core.ir_TRELLIS_FF_Q_21_DI_LUT4_Z_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_CCU2C_S0_CIN_CCU2C_COUT_CIN_CCU2C_COUT_CIN_CCU2C_COUT_S1_CCU2C_S1_COUT (12,19) -> (12,19)
+Info:                          Sink u_core.ir_TRELLIS_FF_Q_21_DI_LUT4_Z_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_CCU2C_S0_CIN_CCU2C_COUT_CIN_CCU2C_COUT_S1_CCU2C_S1$CCU2_COMB0.FCI
+Info:                          Defined in:
+Info:                               rtl/core/alu.v:17.26-17.31
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/arith_map_ccu2c.v:74.7-80.4
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/ccu2c_sim.vh:9.9-9.13
+Info:      logic  0.44  19.52 Source u_core.ir_TRELLIS_FF_Q_21_DI_LUT4_Z_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_CCU2C_S0_CIN_CCU2C_COUT_CIN_CCU2C_COUT_S1_CCU2C_S1$CCU2_COMB0.F
+Info:    routing  1.04  20.56 Net u_core.ir_TRELLIS_FF_Q_21_DI_LUT4_Z_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_CCU2C_S0_CIN_CCU2C_COUT_CIN_CCU2C_COUT_S0[3] (12,19) -> (12,24)
+Info:                          Sink u_core.ir_TRELLIS_FF_Q_17_DI_LUT4_B_D_PFUMX_Z_1_ALUT_LUT4_Z.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  20.80 Source u_core.ir_TRELLIS_FF_Q_17_DI_LUT4_B_D_PFUMX_Z_1_ALUT_LUT4_Z.F
+Info:    routing  0.00  20.80 Net u_core.ir_TRELLIS_FF_Q_17_DI_LUT4_B_D_PFUMX_Z_1_ALUT (12,24) -> (12,24)
+Info:                          Sink u_core.ir_TRELLIS_FF_Q_17_DI_LUT4_B_D_PFUMX_Z_1_BLUT_LUT4_Z.F1
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:133.22-133.24
+Info:      logic  0.17  20.96 Source u_core.ir_TRELLIS_FF_Q_17_DI_LUT4_B_D_PFUMX_Z_1_BLUT_LUT4_Z.OFX
+Info:    routing  0.68  21.64 Net u_core.ir_TRELLIS_FF_Q_14_DI[2] (12,24) -> (13,23)
+Info:                          Sink u_core.ir_TRELLIS_FF_Q_8_DI_LUT4_B_D_LUT4_D_Z_LUT4_Z_1.C
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  21.88 Source u_core.ir_TRELLIS_FF_Q_8_DI_LUT4_B_D_LUT4_D_Z_LUT4_Z_1.F
+Info:    routing  0.72  22.59 Net u_core.ir_TRELLIS_FF_Q_8_DI_LUT4_B_D_LUT4_D_Z[4] (13,23) -> (13,21)
+Info:                          Sink u_core.ir_TRELLIS_FF_Q_19_DI_LUT4_B_D_LUT4_D_Z_PFUMX_Z_BLUT_LUT4_Z.M
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.26  22.85 Source u_core.ir_TRELLIS_FF_Q_19_DI_LUT4_B_D_LUT4_D_Z_PFUMX_Z_BLUT_LUT4_Z.OFX
+Info:    routing  1.28  24.13 Net u_core.ir_TRELLIS_FF_Q_19_DI_LUT4_B_D_LUT4_D_Z[5] (13,21) -> (16,14)
+Info:                          Sink u_core.ir_TRELLIS_FF_Q_22_DI_LUT4_Z_D_LUT4_B_A_LUT4_C_Z_L6MUX21_Z_1_D1_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.M
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.26  24.39 Source u_core.ir_TRELLIS_FF_Q_22_DI_LUT4_Z_D_LUT4_B_A_LUT4_C_Z_L6MUX21_Z_1_D1_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.OFX
+Info:    routing  0.00  24.39 Net u_core.ir_TRELLIS_FF_Q_22_DI_LUT4_Z_D_LUT4_B_A_LUT4_C_Z_L6MUX21_Z_1_D1 (16,14) -> (16,14)
+Info:                          Sink u_core.ir_TRELLIS_FF_Q_22_DI_LUT4_Z_D_LUT4_B_A_LUT4_C_Z_L6MUX21_Z_1_D1_L6MUX21_Z_D0_PFUMX_Z_ALUT_LUT4_Z.FXB
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:157.70-157.72
+Info:      logic  0.24  24.63 Source u_core.ir_TRELLIS_FF_Q_22_DI_LUT4_Z_D_LUT4_B_A_LUT4_C_Z_L6MUX21_Z_1_D1_L6MUX21_Z_D0_PFUMX_Z_ALUT_LUT4_Z.OFX
+Info:    routing  1.26  25.89 Net u_core.ir_TRELLIS_FF_Q_22_DI_LUT4_Z_D_LUT4_B_A_LUT4_C_Z[5] (16,14) -> (19,9)
+Info:                          Sink u_dec.addr_TRELLIS_FF_Q_24_DI_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.M
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.26  26.14 Source u_dec.addr_TRELLIS_FF_Q_24_DI_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.OFX
+Info:    routing  0.62  26.77 Net u_dec.addr_TRELLIS_FF_Q_24_DI (19,9) -> (18,9)
+Info:                          Sink u_dec.addr_TRELLIS_FF_Q_24.M
+Info:      setup  0.00  26.77 Source u_dec.addr_TRELLIS_FF_Q_24.M
+Info: 6.50 ns logic, 20.26 ns routing
+
+Info: Critical path report for cross-domain path '<async>' -> 'posedge $glbnet$clk$TRELLIS_IO_IN':
+Info:       type curr  total name
+Info:     source  0.00  0.00 Source rst$tr_io.O
+Info:    routing  7.11  7.11 Net rst$TRELLIS_IO_IN (24,0) -> (99,48)
+Info:                          Sink simul_count_TRELLIS_FF_Q_1.LSR
+Info:                          Defined in:
+Info:                               results/fmax/build/cpu_core_vn_fetch.v:28.24-28.27
+Info:      setup  0.42  7.53 Source simul_count_TRELLIS_FF_Q_1.LSR
+Info: 0.42 ns logic, 7.11 ns routing
+
+Info: Critical path report for cross-domain path 'posedge $glbnet$clk$TRELLIS_IO_IN' -> '<async>':
+Info:       type curr  total name
+Info:   clk-to-q  0.52  0.52 Source u_dec.addr_TRELLIS_FF_Q_26.Q
+Info:    routing  0.93  1.45 Net u_dec.addr[21] (17,13) -> (17,12)
+Info:                          Sink d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1_D_PFUMX_Z_C0_LUT4_Z.C
+Info:                          Defined in:
+Info:                               rtl/mem/addr_decoder.v:11.24-11.28
+Info:      logic  0.24  1.69 Source d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1_D_PFUMX_Z_C0_LUT4_Z.F
+Info:    routing  0.37  2.05 Net d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1_D_PFUMX_Z_C0[4] (17,12) -> (17,12)
+Info:                          Sink d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1_D_PFUMX_Z_BLUT_LUT4_Z.M
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.26  2.31 Source d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1_D_PFUMX_Z_BLUT_LUT4_Z.OFX
+Info:    routing  0.68  2.99 Net d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1_D[3] (17,12) -> (19,11)
+Info:                          Sink d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  3.22 Source d_fault_LUT4_Z_B_LUT4_Z_D_LUT4_Z_1.F
+Info:    routing  0.76  3.99 Net d_fault_LUT4_Z_B_LUT4_Z_D[3] (19,11) -> (18,9)
+Info:                          Sink d_fault_LUT4_Z_B_LUT4_Z.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  4.22 Source d_fault_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.78  5.01 Net d_fault_LUT4_Z_B[1] (18,9) -> (17,8)
+Info:                          Sink data_ram_LUT4_Z.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  5.24 Source data_ram_LUT4_Z.F
+Info:    routing  0.93  6.17 Net data_ram (17,8) -> (17,7)
+Info:                          Sink u_mem.mem.0.33_DO_1_LUT4_Z.A
+Info:                          Defined in:
+Info:                               rtl/baseline/vn_top.v:55.10-55.18
+Info:      logic  0.24  6.41 Source u_mem.mem.0.33_DO_1_LUT4_Z.F
+Info:    routing  1.36  7.76 Net u_mem.mem.0.32_DO_2[5] (17,7) -> (3,5)
+Info:                          Sink u_mem.mem.0.80_DO_2_LUT4_B_Z_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.M
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.26  8.02 Source u_mem.mem.0.80_DO_2_LUT4_B_Z_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.OFX
+Info:    routing  0.85  8.87 Net u_mem.mem.0.80_DO_2_LUT4_B_Z[3] (3,5) -> (3,6)
+Info:                          Sink u_mem.mem.0.224_DO_2_LUT4_B_Z_LUT4_C_Z_LUT4_Z_1.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  9.10 Source u_mem.mem.0.224_DO_2_LUT4_B_Z_LUT4_C_Z_LUT4_Z_1.F
+Info:    routing  0.86  9.96 Net u_mem.mem.0.224_DO_2_LUT4_B_Z_LUT4_C_Z[5] (3,6) -> (4,8)
+Info:                          Sink u_mem.mem.0.32_DO_3_LUT4_B_Z_LUT4_C_Z_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.M
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.26  10.22 Source u_mem.mem.0.32_DO_3_LUT4_B_Z_LUT4_C_Z_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.OFX
+Info:    routing  0.65  10.87 Net u_mem.mem.0.32_DO_3_LUT4_B_Z_LUT4_C_Z[5] (4,8) -> (6,14)
+Info:                          Sink u_mem.mem.0.32_DO_3_LUT4_B_Z_LUT4_C_Z_LUT4_B.M
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.26  11.13 Source u_mem.mem.0.32_DO_3_LUT4_B_Z_LUT4_C_Z_LUT4_B.OFX
+Info:    routing  0.82  11.95 Net u_core.ir_TRELLIS_FF_Q_22_DI_LUT4_Z_D_LUT4_B_A_PFUMX_C0_Z[5] (6,14) -> (7,16)
+Info:                          Sink u_core.ir_TRELLIS_FF_Q_22_DI_LUT4_Z_D_LUT4_B_A_LUT4_D_Z_L6MUX21_Z_1_D1_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.M
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.26  12.21 Source u_core.ir_TRELLIS_FF_Q_22_DI_LUT4_Z_D_LUT4_B_A_LUT4_D_Z_L6MUX21_Z_1_D1_L6MUX21_Z_D1_PFUMX_Z_ALUT_LUT4_Z.OFX
+Info:    routing  0.00  12.21 Net u_core.ir_TRELLIS_FF_Q_22_DI_LUT4_Z_D_LUT4_B_A_LUT4_D_Z_L6MUX21_Z_1_D1 (7,16) -> (7,16)
+Info:                          Sink u_core.ir_TRELLIS_FF_Q_22_DI_LUT4_Z_D_LUT4_B_A_LUT4_D_Z_L6MUX21_Z_1_D1_L6MUX21_Z_D0_PFUMX_Z_ALUT_LUT4_Z.FXB
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:157.70-157.72
+Info:      logic  0.24  12.45 Source u_core.ir_TRELLIS_FF_Q_22_DI_LUT4_Z_D_LUT4_B_A_LUT4_D_Z_L6MUX21_Z_1_D1_L6MUX21_Z_D0_PFUMX_Z_ALUT_LUT4_Z.OFX
+Info:    routing  1.12  13.57 Net u_core.ir_TRELLIS_FF_Q_13_DI_LUT4_Z_1_D[5] (7,16) -> (8,18)
+Info:                          Sink u_core.state_TRELLIS_FF_Q_DI_LUT4_Z_D_LUT4_Z.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  13.81 Source u_core.state_TRELLIS_FF_Q_DI_LUT4_Z_D_LUT4_Z.F
+Info:    routing  1.30  15.11 Net u_core.state_TRELLIS_FF_Q_DI_LUT4_Z_D[1] (8,18) -> (15,15)
+Info:                          Sink u_core.state_TRELLIS_FF_Q_DI_LUT4_Z_D_LUT4_D.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  15.35 Source u_core.state_TRELLIS_FF_Q_DI_LUT4_Z_D_LUT4_D.F
+Info:    routing  0.84  16.19 Net d_fault_LUT4_Z_C[1] (15,15) -> (18,15)
+Info:                          Sink d_fault_LUT4_Z_D_LUT4_Z.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  16.42 Source d_fault_LUT4_Z_D_LUT4_Z.F
+Info:    routing  0.97  17.39 Net d_fault_LUT4_Z_D[1] (18,15) -> (18,9)
+Info:                          Sink d_fault_LUT4_Z.D
+Info:                          Defined in:
+Info:                               /private/tmp/claude-501/-Users-adarshvashistha-Desktop-Alpine-team/fc919a12-ff19-41d9-af4e-44722d20cbc8/scratchpad/osscad/oss-cad-suite/libexec/../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  17.62 Source d_fault_LUT4_Z.F
+Info:    routing  1.56  19.18 Net d_fault$TRELLIS_IO_OUT (18,9) -> (18,0)
+Info:                          Sink d_fault$tr_io.I
+Info:                          Defined in:
+Info:                               rtl/baseline/vn_top.v:28.24-28.31
+Info: 4.41 ns logic, 14.78 ns routing
+
+Warning: Max frequency for clock '$glbnet$clk$TRELLIS_IO_IN': 37.36 MHz (FAIL at 100.00 MHz)
+
+Info: Max delay <async>                           -> posedge $glbnet$clk$TRELLIS_IO_IN: 7.53 ns
+Info: Max delay posedge $glbnet$clk$TRELLIS_IO_IN -> <async>                          : 19.18 ns
+
+Info: Slack histogram:
+Info:  legend: times are in ps
+Info:          * represents 37 endpoint(s)
+Info:          + represents [1,37) endpoint(s)
+Info: [-16767, -15484) |+
+Info: [-15484, -14201) | 
+Info: [-14201, -12918) |*+
+Info: [-12918, -11635) |**+
+Info: [-11635, -10352) |****+
+Info: [-10352,  -9069) |**************************+
+Info: [ -9069,  -7786) |*****+
+Info: [ -7786,  -6503) |********************+
+Info: [ -6503,  -5220) |*****+
+Info: [ -5220,  -3937) |+
+Info: [ -3937,  -2654) |*********+
+Info: [ -2654,  -1371) |***+
+Info: [ -1371,    -88) |+
+Info: [   -88,   1195) |+
+Info: [  1195,   2478) | 
+Info: [  2478,   3761) | 
+Info: [  3761,   5044) | 
+Info: [  5044,   6327) |+
+Info: [  6327,   7610) |************************************************************ 
+Info: [  7610,   8893) |****************************************************+
+1 warning, 0 errors
+
+Info: Program finished normally.
