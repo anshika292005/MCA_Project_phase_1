@@ -38,8 +38,8 @@ benchmark programs run unchanged on both systems, and a self-checking testbench 
 final register file and data memory match. The Harvard system finishes every program at
 CPI\,=\,1.00, while the baseline needs between 1.02 and 1.37 cycles per instruction, exactly one
 extra cycle per load or store. Yosys synthesis for a Xilinx 7-series target estimates that the
-Harvard system also uses about 34\% fewer LUTs, and place-and-route on a Lattice ECP5 gives it the
-higher clock frequency (42.9 vs 37.3\,MHz), for a 1.17--1.58$\times$ shorter execution time.
+Harvard system also uses about 40\% fewer LUTs, and place-and-route on a Lattice ECP5 gives it the
+higher clock frequency (43.6 vs 37.4\,MHz), for a 1.19--1.60$\times$ shorter execution time.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -131,7 +131,7 @@ can only come from the memory organisation.
 %=====================================================================
 \begin{figure*}[t]
   \centering
-  \resizebox{0.95\textwidth}{!}{\input{figures/block.tex}}
+  \resizebox{0.86\textwidth}{!}{\input{figures/block.tex}}
   \caption{(a) Harvard system: the processor reaches the instruction ROM and the data side
   through separate ports, so a fetch and a load/store can happen in the same cycle. (b)
   Shared-memory baseline: fetches and data accesses use one port to a single memory.}
@@ -196,7 +196,7 @@ of its own; it orchestrates the datapath and drives the independent memory ports
 
 \begin{figure}[t]
   \centering
-  \resizebox{\columnwidth}{!}{\input{figures/datapath.tex}}
+  \resizebox{0.94\columnwidth}{!}{\input{figures/datapath.tex}}
   \caption{Single-cycle datapath of \sig{cpu\_core}. The highlighted LW path uses the
   instruction memory and the data memory in the same clock period.}
   \label{fig:datapath}
@@ -212,7 +212,7 @@ Loads and stores therefore take two cycles; every other instruction takes one.
 
 \begin{figure}[t]
   \centering
-  \resizebox{0.8\columnwidth}{!}{\input{figures/fsm.tex}}
+  \resizebox{0.68\columnwidth}{!}{\input{figures/fsm.tex}}
   \caption{Two-state controller of the shared-memory baseline.}
   \label{fig:fsm}
 \end{figure}
@@ -241,16 +241,21 @@ Verification is done at three levels, and every testbench is self-checking and p
         fetch and a data write occur together.
   \item System tests that run each program on \sig{harvard\_top} and on \sig{vn\_top} until halt
         and compare registers, data memory, \sig{out\_port} and counters with expected values.
+        They also count the cycles in which the top-level \sig{d\_fault} output is high. In
+        \sig{basic}, a store and a load to the invalid address \texttt{0x808} must raise it
+        exactly twice, and the ignored store must leave the word it aliases (data word~2 on the
+        Harvard system, code word~2 on the baseline) unchanged.
   \item A comparison test (\sig{tb\_compare}) that runs both systems on the same program. It
         checks that all 32 registers and all 256 data words agree, that Harvard cycles equal
-        retired instructions, and that baseline cycles equal Harvard cycles plus data accesses.
+        retired instructions, that baseline cycles equal Harvard cycles plus data accesses, and that
+        both systems raise \sig{d\_fault} in the same number of cycles.
 \end{enumerate}
 The RTL is Verilog-2001 \cite{ieee1364}, simulated with Icarus Verilog; waveforms were inspected
 in GTKWave and Surfer. A single \sig{Makefile} runs the whole flow.
 
 \begin{figure*}[t]
   \centering
-  \resizebox{0.92\textwidth}{!}{\input{figures/wave.tex}}
+  \resizebox{0.86\textwidth}{!}{\input{figures/wave.tex}}
   \caption{First twelve cycles of \sig{memcopy}, generated from the simulation trace by
   \sig{tools/vcd2tikz.py} (one column per cycle, sampled mid-cycle, hex addresses). On the
   Harvard system the data address is active in the same cycle as the instruction address. On the
@@ -304,10 +309,10 @@ performing their data accesses. The baseline needs cycles 4--7 for the same two 
     Design & Logic & LUT-RAM & Total & FFs \\
     & LUTs & LUTs & LUTs & \\
     \midrule
-    Harvard: core + data side & 409 & 176 & 585 & 194 \\
+    Harvard: core + data side & 350 & 176 & 526 & 194 \\
     Harvard: instruction ROM  & 128 &   0 & 128 &   0 \\
-    \textbf{Harvard total}    & \textbf{537} & \textbf{176} & \textbf{713} & \textbf{194} \\
-    \textbf{Shared-memory baseline} & \textbf{776} & \textbf{304} & \textbf{1080} & \textbf{227} \\
+    \textbf{Harvard total}    & \textbf{478} & \textbf{176} & \textbf{654} & \textbf{194} \\
+    \textbf{Shared-memory baseline} & \textbf{780} & \textbf{304} & \textbf{1084} & \textbf{227} \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -317,7 +322,7 @@ The second half of the comparison is hardware cost. Both top levels were synthes
 instruction ROM was synthesized separately with pseudo-random contents. Synthesized with a real
 program, Yosys would hard-wire that program and remove decoder logic the program never uses, an
 optimisation the baseline's writable memory does not allow, so separate synthesis keeps the
-comparison fair. Even with the ROM included, the Harvard system uses about 34\% fewer LUTs
+comparison fair. Even with the ROM included, the Harvard system uses about 40\% fewer LUTs
 and 33 fewer flip-flops. The baseline needs a 512-word memory, address multiplexing in front of
 the single port, and the controller; its 33 extra flip-flops are the 32-bit latched instruction
 and the one-bit state register. These numbers are synthesis estimates rather than post-route
@@ -332,10 +337,10 @@ utilisation.
     \toprule
     Build & Critical path & Fmax \\
     \midrule
-    Harvard               & 23.29\,ns & \textbf{42.94\,MHz} \\
-    Baseline, fetch leg   & 26.83\,ns & 37.27\,MHz \\
-    Baseline, MEM leg     & 18.88\,ns & 52.97\,MHz \\
-    \textbf{Baseline}     & 26.83\,ns & \textbf{37.27\,MHz} \\
+    Harvard               & 22.93\,ns & \textbf{43.62\,MHz} \\
+    Baseline, fetch leg   & 26.77\,ns & 37.36\,MHz \\
+    Baseline, MEM leg     & 18.65\,ns & 53.63\,MHz \\
+    \textbf{Baseline}     & 26.77\,ns & \textbf{37.36\,MHz} \\
     \bottomrule
   \end{tabular}
 
@@ -345,10 +350,10 @@ utilisation.
     Program & Harvard & Baseline & Speed-up \\
     & time (ns) & time (ns) & \\
     \midrule
-    basic      &  442 &  698 & 1.58$\times$ \\
-    array\_sum &  885 & 1288 & 1.46$\times$ \\
-    memcopy    & 1258 & 1905 & 1.51$\times$ \\
-    count\_loop& 1490 & 1744 & 1.17$\times$ \\
+    basic      &  436 &  696 & 1.60$\times$ \\
+    array\_sum &  871 & 1285 & 1.47$\times$ \\
+    memcopy    & 1238 & 1900 & 1.54$\times$ \\
+    count\_loop& 1467 & 1740 & 1.19$\times$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -362,10 +367,10 @@ The baseline's structural loop stops nextpnr from timing it at all, so the basel
 two copies, one with only the fetch-state paths ($\sig{m\_addr} = \mathrm{PC}$) and one with only
 the \textsc{Mem}-state paths ($\sig{instr} = \sig{ir}$). Every real path appears in one of them
 and the impossible loop in neither, and the baseline's Fmax is the slower of the two. The Harvard
-system's single cycle contains two memory reads (ROM, then data RAM) yet reaches 42.94\,MHz. The
+system's single cycle contains two memory reads (ROM, then data RAM) yet reaches 43.62\,MHz. The
 baseline's fetch leg contains only one read, but from a 512-word LUT-RAM with a deeper read
-multiplexer, and it limits the baseline to 37.27\,MHz. The Harvard system therefore wins on both
-CPI and clock frequency, and its execution time is 1.17--1.58$\times$ shorter. These results are
+multiplexer, and it limits the baseline to 37.36\,MHz. The Harvard system therefore wins on both
+CPI and clock frequency, and its execution time is 1.19--1.60$\times$ shorter. These results are
 for an ECP5 with one placement seed, not for a Xilinx device.
 
 %=====================================================================

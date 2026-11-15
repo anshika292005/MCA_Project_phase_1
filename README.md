@@ -17,7 +17,7 @@ and data share one memory port, so each load or store costs an extra cycle
 | Member 2 | Anshika (`@anshika292005`) | Processor and top-level integration | `rtl/core/`, `rtl/harvard_top.v` |
 | Member 3 | Ankit (`@Ankit35027`) | Shared-memory baseline and metrics | `rtl/common/`, `rtl/baseline/`, `results/comparison.md` |
 | Member 4 | Samriddhi (`@samriddhi-techy`) | Verification and programs | `tb/`, `programs/`, `tools/`, `sim/` |
-| Member 5 | Ayush | Report, video, repository lead | `report/`, `video/`, `docs/`, `README.md` |
+| Member 5 | Ayush | Report, video, repository lead | `report/`, `video/`, `README.md` |
 
 ## Block diagram
 
@@ -85,9 +85,9 @@ tb/             unit, system and comparison testbenches
 programs/       basic, array_sum, memcopy, count_loop (.s, .hex, _data.hex)
 tools/asm.py    assembler for the instruction subset
 sim/Makefile    build and run targets
-results/        comparison table and simulation logs
+results/        comparison table, simulation and synthesis logs, GTKWave screenshots (results/waves/)
+results/fmax/   ECP5 place-and-route Fmax scripts (run_fmax.sh)
 report/         IEEE-format report (LaTeX source, TikZ figures, PDF)
-docs/           team workflow document
 video/          video script and link
 ```
 
@@ -101,6 +101,27 @@ Measured by `make compare`; full table and discussion in [results/comparison.md]
 | array_sum  | 26.3% | 1.00 | 1.26 | 1.26x |
 | memcopy    | 31.5% | 1.00 | 1.31 | 1.31x |
 | count_loop |  1.6% | 1.00 | 1.02 | 1.02x |
+
+Maximum clock frequency after place and route (Lattice ECP5, Yosys + nextpnr, `sh results/fmax/run_fmax.sh`):
+**Harvard 43.62 MHz, baseline 37.36 MHz**, so in execution time (cycles / Fmax) the Harvard
+design is 1.19x-1.60x faster. Details and method in [results/comparison.md](results/comparison.md).
+
+### Waveforms (GTKWave)
+
+Run `make waves PROG=memcopy` in `sim/` for an interactive view.
+
+- `memcopy` on both designs, 0-190 ns (`gtkwave build/tb_compare_memcopy.vcd waves.gtkw` in `sim/`):
+  Harvard raises `d_re`/`d_we` in the same cycle as the fetch; the baseline spends an extra cycle
+  with `state`/`m_is_data` = 1 for every LW/SW.
+
+  ![GTKWave: memcopy, Harvard vs baseline](results/waves/gtkwave_memcopy_first_load.png)
+
+- Data-side memory control on Harvard, `basic`, 65-185 ns (`gtkwave build/tb_harvard_top_basic.vcd memctrl.gtkw`):
+  SW/LW to RAM (`sel_ram`, `ram_we`); SW and LW to the invalid address `0x808` raise
+  `addr_fault` and `d_fault` while `ram_we` stays 0 and the load returns 0; SW to `0x400`
+  selects `out_port` (`sel_io`, `io_we`).
+
+  ![GTKWave: address decoding and fault detection](results/waves/gtkwave_basic_memctrl.png)
 
 ## Report and video
 
