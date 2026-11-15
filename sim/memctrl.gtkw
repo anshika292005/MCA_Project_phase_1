@@ -1,0 +1,35 @@
+[*] GTKWave save file for tb_harvard_top running basic: data-side memory control.
+[*]   gtkwave build/tb_harvard_top_basic.vcd memctrl.gtkw      (run in sim/ after make harvard)
+[*] Interesting window: about 75 ns - 205 ns (cycle k runs from 15+10k ns to 25+10k ns).
+[*]   ~75 ns     : SW to data RAM         -> sel_ram=1, ram_we=1
+[*]   ~85 ns     : LW from data RAM       -> d_rdata = 0000000C
+[*]   ~115 ns    : ADDI (no access)       -> addr_fault=1 but d_fault=0 (fault only on an access)
+[*]   ~155 ns    : SW to 0x808 (invalid)  -> addr_fault=1, d_fault=1, ram_we stays 0
+[*]   ~165 ns    : LW from 0x808          -> d_fault=1, d_rdata=0
+[*]   ~175 ns    : SW to 0x400            -> sel_io=1, io_we=1, out_port becomes 0000000C
+[*]   ~185 ns    : LW from 0x400          -> d_rdata=0 (out_port is write-only)
+[timestart] 75000
+@28
+tb_harvard_top.clk
+@22
+tb_harvard_top.dut.u_core.i_addr[31:0]
+@200
+-Data port (from cpu_core)
+@22
+tb_harvard_top.dut.u_core.d_addr[31:0]
+tb_harvard_top.dut.u_core.d_wdata[31:0]
+@28
+tb_harvard_top.dut.u_core.d_we
+tb_harvard_top.dut.u_core.d_re
+@200
+-Address decoder + rw_ctrl
+@28
+tb_harvard_top.dut.u_mem.sel_ram
+tb_harvard_top.dut.u_mem.sel_io
+tb_harvard_top.dut.u_mem.addr_fault
+tb_harvard_top.dut.u_mem.ram_we
+tb_harvard_top.dut.u_mem.io_we
+tb_harvard_top.d_fault
+@22
+tb_harvard_top.dut.u_core.d_rdata[31:0]
+tb_harvard_top.out_port[31:0]
