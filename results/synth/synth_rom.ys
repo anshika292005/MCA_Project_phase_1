@@ -1,0 +1,13 @@
+# Yosys synthesis of the 256 x 32 instruction ROM on its own (Xilinx 7-series).
+# Run from the repository root:  yosys -l results/logs/synth_rom.log results/synth/synth_rom.ys
+# rom_random.hex holds 256 pseudo-random words (python random, seed 9), so no
+# bit is constant and the result is the cost of a general 256-word ROM rather
+# than of one particular program.
+read_verilog rtl/mem/instr_mem.v
+chparam -set INIT_FILE "results/synth/rom_random.hex" instr_mem
+hierarchy -top instr_mem
+proc
+# same Yosys init-priority workaround as synth_harvard.ys
+delete t:$meminit_v2 r:WORDS=1 %i
+synth_xilinx -top instr_mem -family xc7 -flatten
+tee -o results/synth/rom_stat.txt stat

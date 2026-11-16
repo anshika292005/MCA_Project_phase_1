@@ -1,0 +1,20 @@
+
+6. Printing statistics.
+
+=== instr_mem ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      251 wires
+      320 wire bits
+        2 public wires
+       64 public wire bits
+        2 ports
+       64 port bits
+      288 cells
+       32   IBUF
+      128   LUT6
+       64   MUXF7
+       32   MUXF8
+       32   OBUF
+
