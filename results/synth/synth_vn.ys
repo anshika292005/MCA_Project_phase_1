@@ -1,0 +1,20 @@
+# Yosys synthesis of the shared-memory baseline for a Xilinx 7-series FPGA (Artix-7 class).
+# Run from the repository root:  yosys -l results/logs/synth_vn.log results/synth/synth_vn.ys
+# The memcopy program and data images are loaded as initial contents. The
+# shared memory is writable, so its contents cannot be hard-wired into the core.
+# Note: Yosys reports "found logic loop" here. It is a structural false positive
+# (m_addr picks alu_y only in MEM, instr picks m_rdata only in FETCH_EXEC), but
+# Vivado will also flag it, so set a false path there before reading Fmax.
+read_verilog rtl/mem/addr_decoder.v rtl/baseline/shared_mem.v rtl/baseline/cpu_core_vn.v
+read_verilog rtl/core/regfile.v rtl/core/alu.v rtl/core/imm_gen.v rtl/core/control.v 
+read_verilog rtl/common/perf_counters.v rtl/baseline/vn_top.v
+chparam -set PROG_FILE "programs/memcopy.hex" -set DATA_FILE "programs/memcopy_data.hex" vn_top
+# Workaround for a Yosys quirk: the memories zero-fill every word in a for loop
+# and then call $readmemh in the same initial block. Simulators apply these in
+# order; Yosys lets the zero-fill win, so the program image would be lost. Deleting the one-word
+# zero-fill init cells keeps only the $readmemh contents. No RTL is changed.
+hierarchy -top vn_top
+proc
+delete t:$meminit_v2 r:WORDS=1 %i
+synth_xilinx -top vn_top -family xc7 -flatten
+tee -o results/synth/vn_stat.txt stat

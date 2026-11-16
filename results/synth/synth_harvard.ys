@@ -1,0 +1,22 @@
+# Yosys synthesis of the Harvard system for a Xilinx 7-series FPGA (Artix-7 class).
+# Run from the repository root:  yosys -l results/logs/synth_harvard.log results/synth/synth_harvard.ys
+# The instruction ROM (instr_mem) is kept as a black box here. If it were
+# synthesized with a program in it, Yosys would hard-wire that program into the
+# core and delete decoder/ALU logic for instructions the program never uses,
+# which the baseline (writable shared memory) cannot do. The ROM itself is
+# measured separately by synth_rom.ys.
+read_verilog rtl/mem/instr_mem.v rtl/mem/data_mem.v rtl/mem/addr_decoder.v rtl/mem/rw_ctrl.v rtl/mem/harvard_mem.v
+read_verilog rtl/core/regfile.v rtl/core/alu.v rtl/core/imm_gen.v rtl/core/control.v rtl/core/pc_reg.v rtl/core/cpu_core.v
+read_verilog rtl/common/perf_counters.v rtl/harvard_top.v
+blackbox instr_mem
+chparam -set PROG_FILE "programs/memcopy.hex" -set DATA_FILE "programs/memcopy_data.hex" harvard_top
+# Workaround for a Yosys quirk: the memories zero-fill every word in a for loop
+# and then call $readmemh in the same initial block. Simulators apply these in
+# order; Yosys lets the zero-fill win, which leaves the instruction ROM empty
+# (all NOPs) so the whole core is optimised away. Deleting the one-word
+# zero-fill init cells keeps only the $readmemh contents. No RTL is changed.
+hierarchy -top harvard_top
+proc
+delete t:$meminit_v2 r:WORDS=1 %i
+synth_xilinx -top harvard_top -family xc7 -flatten
+tee -o results/synth/harvard_stat.txt stat
