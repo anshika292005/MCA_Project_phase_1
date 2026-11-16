@@ -1,0 +1,8 @@
+tb_addr_decoder: PASS
+../tb/tb_addr_decoder.v:37: $finish called at 9000 (1ps)
+tb_instr_mem: PASS
+../tb/tb_instr_mem.v:35: $finish called at 6000 (1ps)
+tb_data_mem: PASS
+../tb/tb_data_mem.v:49: $finish called at 61000 (1ps)
+tb_harvard_mem: PASS
+../tb/tb_harvard_mem.v:81: $finish called at 90000 (1ps)
