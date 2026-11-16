@@ -1,0 +1,14 @@
+  [205000] d_fault: invalid data address 0x00000800
+  [225000] d_fault: invalid data address 0x00000800
+VN      basic      cycles=26 instrs=19 d_access=7 simul=0 out_port=12
+tb_vn_top(basic): PASS
+../tb/tb_vn_top.v:69: $finish called at 306000 (1ps)
+VN      array_sum  cycles=48 instrs=38 d_access=10 simul=0 out_port=31
+tb_vn_top(array_sum): PASS
+../tb/tb_vn_top.v:69: $finish called at 526000 (1ps)
+VN      memcopy    cycles=71 instrs=54 d_access=17 simul=0 out_port=360
+tb_vn_top(memcopy): PASS
+../tb/tb_vn_top.v:69: $finish called at 756000 (1ps)
+VN      count_loop cycles=65 instrs=64 d_access=1 simul=0 out_port=210
+tb_vn_top(count_loop): PASS
+../tb/tb_vn_top.v:69: $finish called at 696000 (1ps)

@@ -1,0 +1,14 @@
+| Program    | Instr | LW/SW % | Harvard cycles | Harvard CPI | Baseline cycles | Baseline CPI | Speed-up | Simultaneous cycles |
+|---|---|---|---|---|---|---|---|---|
+| basic      |   19 |  36.8% |    19 | 1.00 |    26 | 1.37 | 1.37x |     7 |
+tb_compare(basic): PASS
+../tb/tb_compare.v:86: $finish called at 306000 (1ps)
+| array_sum  |   38 |  26.3% |    38 | 1.00 |    48 | 1.26 | 1.26x |    10 |
+tb_compare(array_sum): PASS
+../tb/tb_compare.v:86: $finish called at 526000 (1ps)
+| memcopy    |   54 |  31.5% |    54 | 1.00 |    71 | 1.31 | 1.31x |    17 |
+tb_compare(memcopy): PASS
+../tb/tb_compare.v:86: $finish called at 756000 (1ps)
+| count_loop |   64 |   1.6% |    64 | 1.00 |    65 | 1.02 | 1.02x |     1 |
+tb_compare(count_loop): PASS
+../tb/tb_compare.v:86: $finish called at 696000 (1ps)
