@@ -1,0 +1,17 @@
+# Surfer command file (same view as waves.gtkw, for machines without GTKWave)
+#   surfer build/tb_compare_memcopy.vcd -c waves.sucl
+# Look for an LW/SW: on Harvard, i_addr and d_addr are active in ONE cycle;
+# on the baseline, m_addr carries the PC, then the data address (m_is_data = 1).
+variable_add tb_compare.clk
+divider_add Harvard_two_ports
+variable_add tb_compare.h.u_core.i_addr
+variable_add tb_compare.h.u_core.d_addr
+variable_add tb_compare.h.u_core.d_we
+variable_add tb_compare.h.u_core.d_re
+variable_add tb_compare.h_sim
+divider_add Shared_memory_one_port
+variable_add tb_compare.v.u_core.m_addr
+variable_add tb_compare.v.u_core.m_is_data
+variable_add tb_compare.v.u_core.state
+variable_add tb_compare.v_sim
+zoom_fit

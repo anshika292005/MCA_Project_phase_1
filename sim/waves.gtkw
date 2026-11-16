@@ -1,0 +1,42 @@
+[*] GTKWave save file for tb_compare: Harvard vs shared memory on the same program.
+[*] Look for an LW/SW: on Harvard, i_addr and d_addr are both active in ONE cycle
+[*] (h d_we/d_re high); on the baseline, m_addr carries the PC, then the data address
+[*] in the next cycle (m_is_data = 1), so the same instruction takes two cycles.
+[timestart] 0
+@28
+tb_compare.clk
+tb_compare.rst
+@200
+-Harvard (two ports)
+@22
+tb_compare.h.u_core.i_addr[31:0]
+tb_compare.h.u_core.i_rdata[31:0]
+tb_compare.h.u_core.d_addr[31:0]
+@28
+tb_compare.h.u_core.d_we
+tb_compare.h.u_core.d_re
+@22
+tb_compare.h.u_core.d_wdata[31:0]
+tb_compare.h.u_core.d_rdata[31:0]
+@28
+tb_compare.h_halt
+@24
+tb_compare.h_cyc[31:0]
+tb_compare.h_sim[31:0]
+@200
+-Shared memory (one port)
+@22
+tb_compare.v.u_core.m_addr[31:0]
+tb_compare.v.u_core.m_rdata[31:0]
+@28
+tb_compare.v.u_core.state
+tb_compare.v.u_core.m_is_data
+tb_compare.v.u_core.m_we
+tb_compare.v.u_core.m_re
+@22
+tb_compare.v.u_core.pc[31:0]
+@28
+tb_compare.v_halt
+@24
+tb_compare.v_cyc[31:0]
+tb_compare.v_sim[31:0]
