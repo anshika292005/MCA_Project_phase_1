@@ -1,0 +1,37 @@
+# simulator output (never commit)
+*.vcd
+*.vvp
+*.fst
+sim/build/
+sim/scratch/
+
+# Vivado / Yosys
+*.jou
+*.log
+!results/logs/*.log
+*.str
+.Xil/
+vivado*/
+*.runs/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.sim/
+synth_*.json
+
+# LaTeX build files (the final PDF in report/ IS committed)
+report/*.aux
+report/*.bbl
+report/*.blg
+report/*.out
+report/*.synctex.gz
+report/*.fdb_latexmk
+report/*.fls
+report/*.toc
+
+# Python / OS / editors
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/
+.idea/
