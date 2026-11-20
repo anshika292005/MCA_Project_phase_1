@@ -4,6 +4,9 @@
 // harvard_top : complete Harvard system = cpu_core + harvard_mem + perf_counters
 //   i_access = !halt        (the core fetches every cycle until it halts)
 //   d_access = d_we | d_re  (LW or SW in this cycle)
+// The memories are ideal (combinational read), so the core's Phase II stall
+// inputs i_ready and d_ready are tied to 1: this top level is the Phase II
+// "ideal Harvard" reference and has exactly the Phase I cycle behaviour.
 // Because the two ports are independent, every LW/SW cycle is also a fetch
 // cycle, so simul_count ends up equal to d_access_count.
 // -----------------------------------------------------------------------------
@@ -29,12 +32,15 @@ module harvard_top #(
         .clk       (clk),
         .rst       (rst),
         .i_addr    (i_addr),
+        .i_req     (),                // ideal ROM: always ready, no request needed
         .i_rdata   (i_rdata),
+        .i_ready   (1'b1),
         .d_addr    (d_addr),
         .d_wdata   (d_wdata),
         .d_we      (d_we),
         .d_re      (d_re),
         .d_rdata   (d_rdata),
+        .d_ready   (1'b1),            // ideal data RAM: every access finishes in its cycle
         .halt      (halt),
         .instr_done(instr_done)
     );

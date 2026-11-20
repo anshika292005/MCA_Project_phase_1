@@ -12,6 +12,18 @@
 //
 // The core contains no memory; it only talks to the i_* and d_* ports.
 //
+// Phase II stall interface (both tied to 1 in harvard_top, which then behaves
+// exactly as in Phase I):
+//   i_ready = 0 : the instruction port has no valid instruction this cycle
+//                 (I-cache miss). The core decodes a NOP and holds all state.
+//   d_ready = 0 : the LW/SW of this cycle has not finished (D-cache miss,
+//                 store waiting for memory). PC and register file are held,
+//                 d_addr/d_we/d_re stay asserted until d_ready = 1.
+//   i_req       : = ~halted, the request/enable for the instruction port.
+//                 It depends only on a register, never on the fetched
+//                 instruction, so it cannot form a combinational loop
+//                 through the I-cache (fetched EBREAK -> is_halt -> i_req).
+//
 // Halt: when EBREAK is decoded, halt goes high in that cycle and the PC stops.
 // The 'halted' flag keeps halt high afterwards and makes sure EBREAK is
 // counted as retired exactly once (instr_done is high in the EBREAK cycle only).
@@ -20,20 +32,27 @@ module cpu_core (
     input  wire        clk,
     input  wire        rst,
     output wire [31:0] i_addr,
+    output wire        i_req,
     input  wire [31:0] i_rdata,
+    input  wire        i_ready,
     output wire [31:0] d_addr,
     output wire [31:0] d_wdata,
     output wire        d_we,
     output wire        d_re,
     input  wire [31:0] d_rdata,
+    input  wire        d_ready,
     output wire        halt,
     output wire        instr_done
 );
+    localparam [31:0] NOP = 32'h0000_0013;   // addi x0, x0, 0
+
     wire [31:0] pc, pc_next;
-    wire [31:0] instr = i_rdata;
+    // no valid instruction yet -> execute a NOP (writes nothing, accesses nothing)
+    wire [31:0] instr = i_ready ? i_rdata : NOP;
 
     // control signals
     wire       reg_we, alu_src, mem_re, mem_we, mem_to_reg, is_beq, is_bne, is_halt;
+    wire       is_blt, is_bge, is_jal, is_jalr, is_lui;
     wire [2:0] alu_op;
 
     // datapath values
@@ -42,15 +61,21 @@ module cpu_core (
 
     reg halted;                       // set after EBREAK has retired
 
+    // the LW/SW of this cycle is still waiting for the data port
+    wire d_stall = (mem_re | mem_we) & ~d_ready;
+    // the instruction of this cycle completes at the next rising edge
+    wire advance = i_ready & ~d_stall & ~halt;
+
     // ---------------- fetch ----------------
     pc_reg u_pc (
         .clk    (clk),
         .rst    (rst),
-        .en     (~halt),              // PC freezes in the EBREAK cycle and after
+        .en     (advance),            // PC freezes on a stall, in the EBREAK cycle and after
         .pc_next(pc_next),
         .pc     (pc)
     );
     assign i_addr = pc;
+    assign i_req  = ~halted;
 
     // ---------------- decode ----------------
     control u_ctrl (
@@ -63,7 +88,12 @@ module cpu_core (
         .mem_to_reg(mem_to_reg),
         .is_beq    (is_beq),
         .is_bne    (is_bne),
-        .is_halt   (is_halt)
+        .is_halt   (is_halt),
+        .is_blt    (is_blt),
+        .is_bge    (is_bge),
+        .is_jal    (is_jal),
+        .is_jalr   (is_jalr),
+        .is_lui    (is_lui)
     );
 
     imm_gen u_imm (
@@ -73,7 +103,7 @@ module cpu_core (
 
     regfile u_regfile (
         .clk(clk),
-        .we (reg_we & ~halt),
+        .we (reg_we & advance),
         .ra1(instr[19:15]),           // rs1
         .ra2(instr[24:20]),           // rs2
         .wa (instr[11:7]),            // rd
@@ -93,9 +123,13 @@ module cpu_core (
         .zero(alu_zero)
     );
 
-    // branch: ALU does rs1 - rs2, zero flag means equal
-    wire branch_taken = (is_beq & alu_zero) | (is_bne & ~alu_zero);
-    assign pc_next = branch_taken ? (pc + imm) : (pc + 32'd4);
+    // BEQ/BNE: ALU does rs1 - rs2, zero means equal.
+    // BLT/BGE: ALU does SLT(rs1, rs2), zero means rs1 >= rs2.
+    wire branch_taken = (is_beq & alu_zero) | (is_bne & ~alu_zero) |
+                        (is_blt & ~alu_zero) | (is_bge & alu_zero);
+    wire [31:0] pc_plus4 = pc + 32'd4;
+    assign pc_next = is_jalr                ? {alu_y[31:1], 1'b0} :
+                     (branch_taken | is_jal) ? (pc + imm)          : pc_plus4;
 
     // ---------------- memory (data port, same cycle as the fetch) -------------
     assign d_addr  = alu_y;
@@ -104,7 +138,9 @@ module cpu_core (
     assign d_re    = mem_re & ~halt;
 
     // ---------------- write back ----------------
-    assign wb_data = mem_to_reg ? d_rdata : alu_y;
+    assign wb_data = mem_to_reg           ? d_rdata  :
+                     (is_jal | is_jalr)   ? pc_plus4 :
+                     is_lui               ? imm      : alu_y;
 
     // ---------------- halt / retire ----------------
     always @(posedge clk) begin
@@ -115,6 +151,7 @@ module cpu_core (
     end
 
     assign halt       = halted | is_halt;
-    assign instr_done = ~halted;      // one instruction per cycle until halted
+    // one instruction per cycle until halted, except in stall cycles
+    assign instr_done = ~halted & i_ready & ~d_stall;
 endmodule
 `default_nettype wire
