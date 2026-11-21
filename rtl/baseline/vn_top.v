@@ -10,6 +10,9 @@
 //   else               : write ignored, read returns 0, d_fault = 1
 // Instruction fetches (m_is_data = 0) use the address unchanged (code = words 0..255).
 //
+// The memory is ideal, so the core's Phase II stall input m_ready is tied to 1
+// and this top level keeps exactly the Phase I cycle behaviour.
+//
 // i_access is high only in fetch cycles and d_access only in MEM cycles, so
 // simul_count is always 0: one port cannot do both in the same cycle.
 // -----------------------------------------------------------------------------
@@ -40,6 +43,7 @@ module vn_top #(
         .m_re      (m_re),
         .m_is_data (m_is_data),
         .m_rdata   (m_rdata),
+        .m_ready   (1'b1),            // ideal single-port memory: every transfer takes one cycle
         .halt      (halt),
         .instr_done(instr_done)
     );
