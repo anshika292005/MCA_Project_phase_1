@@ -1,0 +1,11 @@
+ok  x1 = fffffff8 (expected fffffff8)
+ok  x2 = 0000000f (expected 0000000f)
+ok  x3 = ffffff80 (expected ffffff80)
+ok  x4 = 00000001 (expected 00000001)
+ok  x5 = 00000007 (expected 00000007)
+ok  lui x5 = 12345000 (expected 12345000)
+ok  jal link x1 = 8 (expected 8)
+ok  skipped x6 = 0 (expected 0)
+ok  instr = 3 (expected 3)
+ok  I-misses = 1 (expected 1)
+ISS SELFTEST PASS

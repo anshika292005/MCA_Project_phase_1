@@ -4,10 +4,22 @@
 #   make harvard    every program on harvard_top
 #   make vn         every program on vn_top (shared-memory baseline)
 #   make compare    every program on both, prints the comparison table
-#   make all        asm + unit + harvard + vn + compare, logs in ../results/logs/
+#   make phase1     asm + unit + harvard + vn + compare, logs in ../results/logs/
 #   make waves      open the Harvard-vs-baseline waveform (PROG=memcopy) in GTKWave,
 #                   or in Surfer if GTKWave is not installed (Homebrew no longer ships GTKWave for macOS)
 #   make figure     regenerate the report's waveform figure from the memcopy simulation
+#
+# Phase II (memory hierarchy):
+#   make iss        golden-model self-test (tools/iss.py)
+#   make cache      cache unit test (tb_cache)
+#   make system     every program on all five systems, L = 1 and L = 8,
+#                   write buffer off and on (tb_system), log in ../results/logs/system.log
+#   make sweep      full parameter sweep + golden-model cross-check (tools/sweep.py)
+#                   -> ../results/phase2/sweep.csv, summary.md, ../report/data/*.dat
+#   make figure2    Phase II waveform figure (memcopy, L = 4) from a real VCD
+#   make waves2     open that VCD in GTKWave / Surfer
+#   make phase2     iss + cache + system + sweep + figure2
+#   make all        Phase I flow + Phase II flow
 #   make clean
 
 IVERILOG := iverilog -g2005 -Wall -I ../tb
@@ -16,7 +28,9 @@ PYTHON   := python3
 BUILD    := build
 LOGS     := ../results/logs
 
-PROGRAMS := basic array_sum memcopy count_loop
+PROGRAMS1 := basic array_sum memcopy count_loop
+PROGRAMS2 := bubble_sort subroutine transpose isa_test
+PROGRAMS  := $(PROGRAMS1) $(PROGRAMS2)
 PROG     ?= memcopy
 
 MEM_RTL  := ../rtl/mem/instr_mem.v ../rtl/mem/data_mem.v ../rtl/mem/addr_decoder.v \
@@ -29,6 +43,13 @@ VN_RTL   := ../rtl/baseline/shared_mem.v ../rtl/baseline/cpu_core_vn.v ../rtl/ba
             ../rtl/core/imm_gen.v ../rtl/core/control.v
 H_RTL    := $(MEM_RTL) $(CORE_RTL) $(PERF_RTL) ../rtl/harvard_top.v
 ALL_RTL  := $(sort $(H_RTL) $(VN_RTL))
+# Phase II
+HIER_RTL := ../rtl/mem/cache.v ../rtl/mem/main_mem.v ../rtl/common/event_counters.v \
+            ../rtl/common/arbiter.v ../rtl/mh_top.v ../rtl/baseline/vnc_top.v
+SYS_RTL  := $(sort $(ALL_RTL) $(HIER_RTL) $(PERF_RTL))
+SYS_CFGS := 1:0 1:1 8:0 8:1
+FIG2_FIRST  ?= 8
+FIG2_CYCLES ?= 17
 
 # -P parameters for a system testbench, used inside a "for p in ..." shell loop:
 #   $(call params,tb_name)  ->  -Ptb_name.PROG_NAME="basic" -Ptb_name.PROG_FILE=... etc.
@@ -36,9 +57,14 @@ ALL_RTL  := $(sort $(H_RTL) $(VN_RTL))
 params = -P$(1).PROG_NAME=\"$${p}\" -P$(1).PROG_FILE=\"../programs/$${p}.hex\" \
          -P$(1).DATA_FILE=\"../programs/$${p}_data.hex\"
 
-.PHONY: all asm unit harvard vn compare waves figure clean dirs
+.PHONY: all phase1 phase2 asm unit harvard vn compare waves figure clean dirs \
+        iss cache system sweep figure2 waves2 mutate
 
-all: asm unit harvard vn compare
+all: phase1 phase2
+
+phase1: asm unit harvard vn compare
+
+phase2: iss cache mutate system sweep figure2
 
 dirs:
 	@mkdir -p $(BUILD) $(LOGS)
@@ -102,5 +128,50 @@ figure: dirs
 	@test -f $(BUILD)/tb_compare_memcopy.vcd || $(MAKE) compare
 	$(PYTHON) ../tools/vcd2tikz.py $(BUILD)/tb_compare_memcopy.vcd -o ../report/figures/wave.tex --cycles 12
 
+# ---------------------------------------------------------------- Phase II
+iss: dirs
+	$(PYTHON) ../tools/iss.py --selftest | tee $(LOGS)/iss_selftest.log
+	@! grep -q FAIL $(LOGS)/iss_selftest.log
+
+cache: dirs
+	$(IVERILOG) -s tb_cache -o $(BUILD)/tb_cache.vvp ../tb/tb_cache.v ../rtl/mem/cache.v ../rtl/mem/main_mem.v
+	$(VVP) $(BUILD)/tb_cache.vvp | grep -v "VCD info" | tee $(LOGS)/cache.log
+	@! grep -q FAIL $(LOGS)/cache.log
+
+# every program on every system for a few (latency : write buffer) settings, 8 lines per cache
+system: dirs
+	@rm -f $(LOGS)/system.log
+	@for c in $(SYS_CFGS); do L=$${c%%:*}; W=$${c#*:}; \
+	  $(IVERILOG) -s tb_system -Ptb_system.LATENCY=$$L -Ptb_system.WBUF=$$W \
+	    -o $(BUILD)/tb_system_L$${L}_wb$${W}.vvp ../tb/tb_system.v $(SYS_RTL) || exit 1; \
+	  for p in $(PROGRAMS); do \
+	    $(VVP) $(BUILD)/tb_system_L$${L}_wb$${W}.vvp +PROG=../programs/$$p.hex \
+	      +DATA=../programs/$${p}_data.hex +NAME=$$p | grep -E "PASS|FAIL" | tee -a $(LOGS)/system.log; \
+	  done; done
+	@! grep -q FAIL $(LOGS)/system.log
+
+sweep: dirs
+	cd .. && $(PYTHON) tools/sweep.py
+
+# Phase II waveform: memcopy on the modified Harvard system, L = 4, write buffer on
+$(BUILD)/tb_system_memcopy.vcd: | dirs
+	$(IVERILOG) -s tb_system -Ptb_system.LATENCY=4 -Ptb_system.WBUF=1 \
+	  -o $(BUILD)/tb_system_wave.vvp ../tb/tb_system.v $(SYS_RTL)
+	$(VVP) $(BUILD)/tb_system_wave.vvp +PROG=../programs/memcopy.hex \
+	  +DATA=../programs/memcopy_data.hex +NAME=memcopy +VCD=$(BUILD)/tb_system_memcopy.vcd | grep -E "PASS|FAIL"
+
+figure2: $(BUILD)/tb_system_memcopy.vcd
+	$(PYTHON) ../tools/vcd2tikz.py $(BUILD)/tb_system_memcopy.vcd -o ../report/figures/wave2.tex \
+	  --set phase2 --first $(FIG2_FIRST) --cycles $(FIG2_CYCLES)
+
+waves2: $(BUILD)/tb_system_memcopy.vcd
+	@if command -v gtkwave >/dev/null; then gtkwave $(BUILD)/tb_system_memcopy.vcd & \
+	elif command -v surfer >/dev/null; then surfer $(BUILD)/tb_system_memcopy.vcd & \
+	else echo "install GTKWave or Surfer (brew install surfer) to view waveforms"; fi
+
 clean:
 	rm -rf $(BUILD)
+
+# tb_cache must fail on deliberately broken RTL copies (see tools/mutate_cache.sh)
+mutate: dirs
+	sh ../tools/mutate_cache.sh | tee $(LOGS)/mutate.log
