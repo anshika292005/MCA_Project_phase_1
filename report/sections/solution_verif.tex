@@ -1,0 +1,60 @@
+% Owner: Samriddhi (Member 4)
+\subsection{Verification approach}
+The RTL is Verilog-2001 \cite{ieee1364}, simulated with Icarus Verilog \cite{icarus}. Every
+testbench checks its own results and prints \texttt{PASS} or \texttt{FAIL}, and one
+\sig{Makefile} runs the whole flow (\texttt{make all}).
+
+\textbf{Assembler and programs.} The Phase~I two-pass assembler now supports the new
+instructions and the pseudo-instructions \texttt{j}, \texttt{ret} and \texttt{mv}. Its
+self-test checks 29 encodings against hand-computed values, including well-known reference
+encodings such as \texttt{ret}\,=\,\texttt{0x00008067}. Four new programs, each with different
+memory behaviour, join the Phase~I four:
+\begin{itemize}
+  \item \sig{bubble\_sort}: sorts 16 signed words. It has strong temporal locality and issues
+        stores in pairs, one pair per swap.
+  \item \sig{subroutine}: multiply, GCD and popcount subroutines and a nested call through a
+        stack. Its 59-word code footprint exceeds an 8-line instruction cache.
+  \item \sig{transpose}: an $8\times8$ matrix transpose. Its reads are sequential (spatial
+        locality) and its writes have a stride of 8 words.
+  \item \sig{isa\_test}: every new instruction once, with hand-computed results.
+\end{itemize}
+The final register and memory values of every program were worked out by hand (and with plain
+Python) and are checked on both Phase~I systems.
+
+\textbf{Golden model.} \sig{tools/iss.py} is an instruction-set simulator written independently
+of the RTL and the assembler. It decodes the instruction bits itself. It predicts the final
+registers, data memory and \sig{out\_port}; the instruction, load and store counts; and the
+misses of split and unified direct-mapped caches of any size, with write-through and
+no-write-allocate.
+
+\textbf{Cache unit test.} \sig{tb\_cache} drives four caches with memories of latency 3 or 1.
+Its 41 checks cover miss timing ($1+L$ cycles), hits, a buffered store, a store waiting for a
+busy buffer, no-write-allocate, a read after a buffered store miss, conflict eviction, store
+hits with and without a buffer, and uncached mode. We confirmed that the test can fail by
+running it against three deliberately broken copies of the RTL: one with the read-after-write
+wait removed, one where a store miss writes the line, and one with an off-by-one memory latency.
+Each copy fails at least one check (\texttt{make mutate}).
+
+\textbf{System testbench.} \sig{tb\_system} runs one program on five systems at once: the ideal
+Harvard reference, the modified Harvard system, the unified-cache system, the no-cache system
+and the Phase~I baseline. It checks that:
+\begin{itemize}
+  \item registers, all 256 data words, \sig{out\_port}, instruction counts, data-access counts
+        and fault cycles match the reference;
+  \item the identities (\ref{eq:mh})--(\ref{eq:bus}) hold;
+  \item there are no conflicts on a single bus, and no conflicts or write-buffer stalls when the
+        buffer is off;
+  \item with $L=1$, the no-cache system equals the Phase~I baseline in cycle count and in bus
+        address and FSM state in every cycle.
+\end{itemize}
+
+\textbf{Sweep.} \sig{tools/sweep.py} runs \sig{tb\_system} for eight programs
+$\times$ $L\in\{1,2,4,8,16\}$ $\times$ $N\in\{1,2,4,8,16,32\}$ lines per split cache
+$\times$ write buffer off/on, plus a placement experiment (Section~\ref{sec:split}): 528 runs in
+all. It cross-checks every RTL miss count and instruction count against the golden model, and
+every final state against the ISS. With the buffer off it also checks an exact stall model.
+Cached systems must satisfy $S_I = L\cdot M_I$ and $S_D = L\cdot M_D + (L-1)\cdot W$. The
+no-cache system must satisfy $S_I = (L-1)\cdot I$ and $S_D=(L-1)(R+W)$. Here $M$ is a miss count
+and $R$, $W$ are the loads and stores to RAM. All 528 runs pass, with 9888 golden-model checks
+and no mismatch. The script also writes the CSV file, the summary tables and the plot data used
+below, so no number in this report was typed by hand.

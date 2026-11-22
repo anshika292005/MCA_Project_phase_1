@@ -1,0 +1,9 @@
+prog mhcpi ucpi ncpi mhmiss umiss
+basic 4.1053 4.3684 9.4737 6 6
+arraysum 2.2368 5.4474 9.9211 5 19
+memcopy 2.0556 3.3333 10.3889 5 12
+countloop 1.2500 1.2656 8.0156 2 2
+bubblesort 1.5586 4.1763 11.2788 11 262
+subroutine 1.7121 1.5285 8.3620 80 55
+transpose 1.5724 2.1220 10.0603 39 74
+isatest 5.5161 5.6774 11.1290 8 8

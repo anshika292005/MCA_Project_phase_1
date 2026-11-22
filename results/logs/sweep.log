@@ -1,0 +1,3 @@
+sweep: 528 tb_system runs (66 configurations x 8 programs), 2640 result rows, 9888 golden-model checks, 8 final states compared with the ISS
+errors: 0
+SWEEP PASS

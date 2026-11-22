@@ -1,0 +1,91 @@
+% Owner: Samriddhi (Member 4)
+\subsection{Phase II timing behaviour}
+Fig.~\ref{fig:wave2} is generated from the VCD of \sig{memcopy} on the modified Harvard system
+with $L=4$. In cycles 8--11 the I-cache misses on PC \texttt{0x010}: \sig{i\_ready} is low, the
+arbiter grants the instruction side, and \sig{m\_ready} rises in the fourth cycle. The LW then
+misses in the D-cache (cycles 12--15, physical \texttt{0x400}) and completes as a hit in cycle
+16. The SW in cycle 17 finds the write buffer empty and is offered to memory. Memory does not
+finish it in that cycle, so the buffer captures it, \sig{d\_ready} stays high and the core goes
+on to execute \texttt{0x018} and \texttt{0x01c} while the store drains (\sig{wb\_busy}). In cycle
+20 the next instruction misses while the D-side still owns the memory. This is a conflict cycle:
+because there is no pre-emption, the instruction refill starts only in cycle 21.
+
+\begin{figure*}[t]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures/wave2.tex}}
+  \caption{Phase II, \sig{memcopy} on the modified Harvard system ($N=8$, $L=4$, write buffer
+  on), cycles 8--24, generated from the simulation trace by \sig{tools/vcd2tikz.py}. Instruction
+  miss, data miss, buffered store overlapping execution, and an instruction miss that waits for
+  the store to drain (no pre-emption).}
+  \label{fig:wave2}
+\end{figure*}
+
+\subsection{CPI vs memory latency}
+Fig.~\ref{fig:cpi} shows the suite CPI (total cycles divided by total instructions over all
+eight programs) as the memory latency grows, with $N=8$ lines per split cache and the write
+buffer on. The ideal Harvard system stays at 1.00 and the Phase~I baseline at 1.24. Without a
+cache, every fetch and every data access pays the full latency, so the CPI grows almost
+linearly, reaching 9.88 at $L=8$ and 19.7 at $L=16$. The caches hide most of this. At $L=8$ the
+modified Harvard system reaches 1.69 and the unified system 2.72, and both grow far more slowly
+than the no-cache system. At $L=1$ the caches \emph{cost} cycles. No-cache at $L=1$ is the
+Phase~I baseline (1.24), but the unified system needs 1.39, because every miss still costs a
+cycle and code and data evict each other. Caches pay off as soon as $L\ge2$.
+
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=\columnwidth, height=5.4cm, xmode=log, log basis x=2, ymode=log,
+        xlabel={memory latency $L$ (cycles)}, ylabel={suite CPI},
+        xtick={1,2,4,8,16}, xticklabels={1,2,4,8,16},
+        ytick={1,1.5,2,3,5,10,20}, yticklabels={1,1.5,2,3,5,10,20},
+        legend style={font=\scriptsize, cells={anchor=west}, at={(0.5,-0.32)}, anchor=north,
+          legend columns=2},
+        grid=major, grid style={gray!25}, tick label style={font=\scriptsize}]
+      \addplot[thick, black, mark=*, mark size=1.4pt] table[x=L, y=nocache] {data/cpi_latency.dat};
+      \addlegendentry{no cache (single bus)}
+      \addplot[thick, red!70!black, mark=square*, mark size=1.4pt] table[x=L, y=unified] {data/cpi_latency.dat};
+      \addlegendentry{unified cache, $2N$ lines}
+      \addplot[thick, blue!70!black, mark=triangle*, mark size=1.8pt] table[x=L, y=mh] {data/cpi_latency.dat};
+      \addlegendentry{modified Harvard, $N{+}N$ lines}
+      \addplot[thick, dashed, gray] table[x=L, y=vnideal] {data/cpi_latency.dat};
+      \addlegendentry{Phase I baseline (ideal)}
+      \addplot[thick, dotted, black] table[x=L, y=ideal] {data/cpi_latency.dat};
+      \addlegendentry{ideal Harvard}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Suite CPI vs memory latency ($N=8$, 4-word lines, write buffer on), plotted from
+  \sig{sweep.csv}. Both axes are logarithmic.}
+  \label{fig:cpi}
+\end{figure}
+
+\subsection{Write-buffer ablation}
+Table~\ref{tab:wbuf} compares the cycle counts with the write buffer off and on at $L=8$,
+$N=8$. For the store-heavy programs the buffer removes 22--26\% of the cycles of the modified
+Harvard system. Over the whole suite it removes 15.1\% (5618 to 4768 cycles), and 10.1\% for the
+unified system (8547 to 7688). The gain is smaller than the stores' share of the time, for the
+three reasons Skadron and Clark give \cite{skadron1997}:
+\begin{itemize}
+  \item a one-entry buffer is often still busy when the next store arrives: \sig{bubble\_sort}
+        writes its swaps in pairs and spends 429 cycles waiting for the buffer;
+  \item a read miss must wait until the buffer has drained;
+  \item a draining store blocks the next instruction refill, which shows up as arbiter
+        conflicts (12 cycles in \sig{bubble\_sort}, 23 in \sig{subroutine}).
+\end{itemize}
+Without a cache the buffer gains nothing (27947 cycles both ways): every following fetch needs
+the same memory port anyway, so it simply waits for the drain instead of for the store.
+
+\begin{table}[t]
+  \caption{Write-buffer ablation, $L=8$, $N=8$: cycles without / with the buffer}
+  \label{tab:wbuf}
+  \centering
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}lrrrrrr@{}}
+    \toprule
+    & & \multicolumn{3}{c}{Modified Harvard} & \multicolumn{2}{c}{Unified} \\
+    \cmidrule(lr){3-5}\cmidrule(lr){6-7}
+    Program & Stores & off & on & gain & off & on \\
+    \midrule
+    \tabinput{data/tab_wbuf.tex}
+    \bottomrule
+  \end{tabular}
+\end{table}
