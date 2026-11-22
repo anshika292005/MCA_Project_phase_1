@@ -1,0 +1,15 @@
+# Phase II: modified Harvard system (mh_top): core + I-cache + D-cache (8 lines x 4 words
+# each, write buffer on) + arbiter + counters, Xilinx 7-series.
+# Run from the repository root:  yosys -l results/logs/synth2_mh.log results/synth2/synth_mh.ys
+# The shared lower-level memory (main_mem) is a black box: it stands for block RAM or
+# off-chip memory and is the same for every Phase II design.
+read_verilog rtl/mem/addr_decoder.v rtl/mem/rw_ctrl.v rtl/mem/cache.v rtl/mem/main_mem.v
+read_verilog rtl/core/regfile.v rtl/core/alu.v rtl/core/imm_gen.v rtl/core/control.v rtl/core/pc_reg.v rtl/core/cpu_core.v
+read_verilog rtl/common/perf_counters.v rtl/common/event_counters.v rtl/common/arbiter.v rtl/mh_top.v
+blackbox main_mem
+chparam -set I_LINES 8 -set D_LINES 8 -set LINE_WORDS 4 -set WBUF 1 mh_top
+hierarchy -top mh_top
+proc
+delete t:$meminit_v2 r:WORDS=1 %i
+synth_xilinx -top mh_top -family xc7 -flatten
+tee -o results/synth2/mh_stat.txt stat

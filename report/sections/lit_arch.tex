@@ -1,0 +1,33 @@
+% Owner: Ankit (Member 3)
+%=====================================================================
+\section{Literature Review}
+%=====================================================================
+\subsection{Stored-program memory organisations}
+In von Neumann's EDVAC design, instructions and data are stored in the same memory
+\cite{vonneumann1945}. Programs can therefore be loaded and changed like any other data, but
+every instruction needs at least one memory transfer (its fetch), and loads and stores need a
+second one. Backus called the single connection between processor and store the
+``von~Neumann bottleneck'' \cite{backus1978}, and because processor speed has grown much faster
+than memory speed, its cost keeps rising, a trend described as the memory wall \cite{wulf1995}.
+The simplest visible form of the bottleneck is a structural hazard: when a fetch and a data
+access need the same port in the same cycle, one of them must wait \cite{hp_quant}.
+
+The Harvard organisation takes its name from the Harvard Mark~I, whose instructions came from
+punched tape while numbers were held in separate counters \cite{aiken1946}. Physically separate
+instruction and data memories, each with its own address and data bus, double the bandwidth
+available to the processor, but the division of storage between code and data is fixed and a
+second set of buses is needed \cite{hp_quant}. Textbook single-cycle processors need exactly this
+arrangement, because a load must read an instruction word and a data word in the same clock
+period, whereas a multi-cycle processor can share one memory by fetching and accessing data in
+different cycles \cite{ph_riscv,harris_riscv}. Our Phase~I designs are these two textbook cases.
+
+\subsection{Modified Harvard organisations}
+General-purpose processors rarely keep two separate main memories. They apply the Harvard idea
+only at the top of the hierarchy: split level-1 instruction and data caches give the pipeline
+two ports, and a single unified memory below the caches holds both code and data, so programs can
+still be loaded as data \cite{hp_quant,ph_riscv}. Smith's survey already compares split and
+unified caches. The split gives twice the bandwidth and lets each cache be optimised for its
+access pattern. The unified cache shares its capacity dynamically between code and data, so a
+program whose code is large and data small, or the reverse, can still use all of it
+\cite{smith1982}. Which effect wins depends on the workload, on the cache size and on whether the
+processor can actually use two accesses per cycle. Phase~II measures this trade-off directly.

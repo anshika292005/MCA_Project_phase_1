@@ -1,0 +1,31 @@
+
+19. Printing statistics.
+
+=== mh_top ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2062 wires
+     5269 wire bits
+       45 public wires
+     1057 public wire bits
+       15 ports
+      356 port bits
+     2193 cells
+       13   $scopeinfo
+        1   BUFG
+      125   CARRY4
+      472   FDRE
+        2   IBUF
+       16   INV
+      182   LUT2
+      102   LUT3
+      218   LUT4
+      376   LUT5
+      258   LUT6
+       15   MUXF7
+        6   MUXF8
+      354   OBUF
+       52   RAM32M
+        1   main_mem
+

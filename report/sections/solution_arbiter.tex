@@ -1,0 +1,31 @@
+% Owner: Ankit (Member 3)
+\subsection{Arbiter and system tops}
+In the modified Harvard system both caches refill from the same memory, so \sig{arbiter} decides
+who uses the port. Instruction requests have fixed priority, because the core can do nothing
+without its next instruction. Once a transfer has started, it is never pre-empted: a register
+remembers the owner until \sig{ready}. Otherwise the memory's latency count would be handed to
+the other request. The grant depends only on the two requests and that register, and nothing is
+forwarded from memory into a request, so the arbiter adds no combinational loop. A
+\emph{conflict cycle} is a cycle in which both caches request the memory. Since the core is
+single-cycle, an instruction miss and a data access cannot normally happen at the same time:
+while the I-cache misses, the core executes a NOP. Conflicts therefore arise only when the write
+buffer is still draining a store as the next instruction misses.
+
+\sig{mh\_top} connects the core, the I-cache (no write buffer), the Phase~I \sig{addr\_decoder}
+and \sig{rw\_ctrl}, the D-cache at physical address \sig{d\_addr}\,$+$\,\texttt{0x400}, the
+arbiter and \sig{main\_mem}. \sig{vnc\_top} connects the single-bus core to the same decoder,
+one cache (unified, or uncached) and \sig{main\_mem}. Fetches use the PC unchanged, and data-RAM
+accesses add \texttt{0x400}, as in Phase~I.
+
+\subsection{Performance counters}
+The Phase~I \sig{perf\_counters} (cycles, retired instructions, completed data accesses) is
+used unchanged. A new \sig{event\_counters} module counts I-misses, D-misses, I-stall cycles,
+D-stall cycles, write-buffer stall cycles and arbiter conflict cycles, and follows the same
+freeze rule: the EBREAK cycle is counted, then every counter stops. These counters make exact
+cycle-accounting identities possible:
+\begin{align}
+  \text{cycles}_{\text{mH}} &= I + S_I + S_D, \label{eq:mh}\\
+  \text{cycles}_{\text{bus}} &= I + A + S_I + S_D, \label{eq:bus}
+\end{align}
+where $I$ is the number of retired instructions, $A$ the number of loads and stores (the extra
+\textsc{Mem} cycle of the single bus), and $S_I$, $S_D$ the instruction and data stall cycles.

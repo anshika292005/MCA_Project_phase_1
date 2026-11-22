@@ -1,0 +1,45 @@
+% Owner: Ankit (Member 3)
+%=====================================================================
+\section{Results and Discussion}
+%=====================================================================
+\subsection{Phase I: ideal Harvard vs shared memory}
+Table~\ref{tab:p1} lists the two Phase~I systems, now running the extended instruction set; all
+tests pass. The first four rows are identical to the Phase~I report, which confirms that the
+extension did not change Phase~I timing. The Harvard system always runs at CPI\,=\,1.00, and
+every one of its data accesses overlaps a fetch. The baseline needs exactly one extra cycle per
+load or store, so
+\begin{equation}
+  \mathrm{CPI}_{\text{baseline}} = 1 + f_{\text{LS}},
+\end{equation}
+where $f_{\text{LS}}$ is the fraction of instructions that are loads or stores. The speed-up
+grows with memory intensity, from 1.02$\times$ for \sig{count\_loop} to 1.42$\times$ for
+\sig{isa\_test}. Fig.~\ref{fig:wave1} shows the effect cycle by cycle.
+
+\begin{table}[t]
+  \caption{Ideal memories: Harvard vs single-port baseline (Icarus Verilog)}
+  \label{tab:p1}
+  \centering
+  \setlength{\tabcolsep}{3.2pt}
+  \begin{tabular}{@{}lrrrrrr@{}}
+    \toprule
+    Program & Instr & LS\% & Harv.\ cyc & Base.\ cyc & Base.\ CPI & Speed-up \\
+    \midrule
+    \tabinput{data/tab_phase1.tex}
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure*}[t]
+  \centering
+  \resizebox{0.80\textwidth}{!}{\input{figures/wave.tex}}
+  \caption{Phase I, first twelve cycles of \sig{memcopy}, generated from the simulation trace by
+  \sig{tools/vcd2tikz.py}. On the Harvard system the data address is active in the same cycle as
+  the instruction address. On the baseline every LW/SW occupies an extra \textsc{Mem} cycle on
+  the shared bus.}
+  \label{fig:wave1}
+\end{figure*}
+
+In Phase~I, Yosys synthesis for a Xilinx 7-series target gave 654 LUTs for the Harvard system
+(including a separately synthesised ROM) and 1084 for the baseline, and place-and-route on a
+Lattice ECP5 gave 43.6\,MHz and 37.4\,MHz. The Phase~I report and its scripts are kept unchanged
+in the repository (\sig{report/phase1/}, \sig{results/synth/}, \sig{results/fmax/}).

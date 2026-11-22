@@ -1,0 +1,11 @@
+# Phase II: ideal shared-memory baseline (vn_top, Phase II instruction set), Xilinx 7-series.
+# Run from the repository root:  yosys -l results/logs/synth2_vn.log results/synth2/synth_vn.ys
+read_verilog rtl/mem/addr_decoder.v rtl/baseline/shared_mem.v rtl/baseline/cpu_core_vn.v
+read_verilog rtl/core/regfile.v rtl/core/alu.v rtl/core/imm_gen.v rtl/core/control.v
+read_verilog rtl/common/perf_counters.v rtl/baseline/vn_top.v
+chparam -set PROG_FILE "programs/memcopy.hex" -set DATA_FILE "programs/memcopy_data.hex" vn_top
+hierarchy -top vn_top
+proc
+delete t:$meminit_v2 r:WORDS=1 %i
+synth_xilinx -top vn_top -family xc7 -flatten
+tee -o results/synth2/vn_stat.txt stat

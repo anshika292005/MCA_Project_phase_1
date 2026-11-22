@@ -1,0 +1,143 @@
+% Owner: Ankit (Member 3)
+\subsection{Split vs unified caches}
+\label{sec:split}
+Table~\ref{tab:split} compares the modified Harvard system ($8+8$ lines) with the unified
+system (16 lines) at $L=8$. The split design is faster on seven of the eight programs, by up to
+2.68$\times$. Two separate effects cause this.
+
+\textbf{Single port.} Even with perfect caches, the single-bus core fetches and accesses data in
+different cycles, so its CPI cannot fall below $1+f_{\text{LS}}$: 1.41 for \sig{bubble\_sort},
+for example. The split design can overlap a hit in each cache in the same cycle. This is the
+Phase~I result, still present one level up.
+
+\textbf{Code/data conflict misses.} The unified cache misses far more often: 262 times on
+\sig{bubble\_sort}, against 11 for the split pair. Code starts at physical \texttt{0x000} and
+data at \texttt{0x400}. Every unified size we test (up to 64 lines, 1\,KB) divides
+\texttt{0x400}, so code word $k$ and data word $k$ always map to the same line. Both loops of
+\sig{bubble\_sort} sit in code lines 0--3, and its 16-word array occupies the same four cache
+lines, so code and data evict each other on every iteration. These are conflict misses in the sense of Hill and Smith
+\cite{hill1989}. A larger direct-mapped cache cannot remove them, which is why the unified miss
+count stays flat in Fig.~\ref{fig:size}.
+
+\begin{table}[t]
+  \caption{Split ($8+8$ lines) vs unified (16 lines), $L=8$, write buffer on}
+  \label{tab:split}
+  \centering
+  \setlength{\tabcolsep}{2.6pt}
+  \begin{tabular}{@{}lrrrrrrr@{}}
+    \toprule
+    & \multicolumn{2}{c}{Split misses} & \multicolumn{2}{c}{Unified misses} &
+      \multicolumn{2}{c}{CPI} & Unified/ \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+    Program & I & D & fetch & data & split & unified & split \\
+    \midrule
+    \tabinput{data/tab_split.tex}
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Where unified wins.} The unified cache wins when its shared capacity matters more than
+these two penalties:
+\begin{itemize}
+  \item \sig{subroutine} has a 59-word (15-line) code footprint and very little data. An 8-line
+        I-cache cannot hold it (75 I-misses), while a 16-line unified cache holds most of it
+        (55 misses in all). At $N=8$ the unified system is therefore faster (CPI 1.53 vs 1.71,
+        a ratio of 0.89$\times$ in Table~\ref{tab:split}), even though it pays the single-port
+        penalty.
+  \item With one line per split cache, the unified pair of lines wins for the whole suite
+        (1019 vs 1168 misses, CPI 4.47 vs 4.70). The 2-line cache can keep a loop's code line
+        and its data line at the same time, while a one-line I-cache thrashes on any loop that
+        crosses a line boundary.
+\end{itemize}
+Smith predicts exactly this behaviour \cite{smith1982}: a unified cache adapts to the mix of
+code and data, while a split cache wastes the capacity of the side that does not need it.
+
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=\columnwidth, height=5.4cm, xmode=log, log basis x=2, ymode=log,
+        xlabel={lines per split cache $N$ (unified: $2N$)}, ylabel={total misses, 8 programs},
+        xtick={1,2,4,8,16,32}, xticklabels={1,2,4,8,16,32},
+        legend style={font=\scriptsize, cells={anchor=west}, at={(0.5,-0.32)}, anchor=north},
+        grid=major, grid style={gray!25}, tick label style={font=\scriptsize}]
+      \addplot[thick, blue!70!black, mark=triangle*, mark size=1.8pt] table[x=N, y=split] {data/size_suite.dat};
+      \addlegendentry{split I + D (any placement)}
+      \addplot[thick, red!70!black, mark=square*, mark size=1.4pt] table[x=N, y=unified] {data/size_suite.dat};
+      \addlegendentry{unified, data at \texttt{0x400}}
+      \addplot[thick, dashed, red!70!black, mark=o, mark size=1.6pt] table[x=N, y=unified] {data/size_skew_suite.dat};
+      \addlegendentry{unified, data at \texttt{0x480}}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Total misses vs cache size ($L=8$, write buffer on). The unified cache wins at
+  $N=1$. With the Phase~I memory map, code and data alias, and a larger unified cache stops
+  helping. Moving the data by half a 16-line cache removes most of that aliasing.}
+  \label{fig:size}
+\end{figure}
+
+\textbf{Placement sensitivity.} To separate the aliasing effect from the organisation itself,
+the sweep repeats the $L=8$ runs with the data image moved to physical \texttt{0x480}
+(Fig.~\ref{fig:size}, dashed). The split miss counts do not change, which the sweep checks: the
+D-cache sees only data, and the shift is a whole number of lines. The unified cache improves
+dramatically. At $N=8$ it misses 165 times instead of 438, against 156 for the split pair, and
+\sig{bubble\_sort} drops from 262 misses to 11. The suite CPI falls from 2.72 to 1.87, which is
+still above the split design's 1.69 because of the single-port penalty. The unified cache is
+therefore not inherently much worse than the split pair; most of its deficit in
+Table~\ref{tab:split} is the code/data placement. A real system would use a set-associative
+cache, or link data at an address that is not a multiple of the cache size.
+
+\subsection{Hardware cost and timing}
+\label{sec:area}
+Table~\ref{tab:area} gives Yosys \cite{yosys} estimates for a Xilinx 7-series device
+(\texttt{synth\_xilinx}, version 0.71). In the cached designs the shared memory is a black box, because it
+stands for block RAM or external memory and is the same in every design. The ideal Harvard
+system includes the separately synthesised 256-word ROM, as in Phase~I, so the tool cannot
+hard-wire one program into the decoder. The modified Harvard system with two 8-line caches
+needs about as many LUTs as the single-bus system with no cache, and fewer than the single-bus
+system with a 16-line unified cache. Its I-cache has no write path, and the single-bus core needs
+its FSM, latched instruction and address multiplexers. In every cached design, 192 of the
+roughly 470 flip-flops are the six 32-bit event counters, which exist only for measurement.
+Compared with Phase~I (654 and 1084 total LUTs), the extended instruction set, mainly the barrel
+shifter and the jump logic, increases the ideal Harvard and baseline designs by 69\% and 29\%.
+
+\begin{table}[t]
+  \caption{Synthesis estimate, Yosys \texttt{synth\_xilinx -family xc7}}
+  \label{tab:area}
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{2.4pt}
+  \begin{tabular}{@{}lrrrr@{}}
+    \toprule
+    Design & Logic & LUT- & Total & FFs \\
+           & LUTs  & RAM  & LUTs  &     \\
+    \midrule
+    \tabinput{data/area.tex}
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Combinational loops.} The modified Harvard design synthesises with no
+``logic loop'' warning. To check that the timing rules are what keeps it loop-free,
+\sig{results/synth2/loop\_demo.sh} synthesises two broken copies. With refill forwarding,
+Yosys reports 92 loop warnings through the arbiter's address multiplexer. With the I-cache
+request set to \sig{\textasciitilde halt}, it reports one loop through the EBREAK decoder and the
+cache's ready output. Both single-bus systems still report the Phase~I loop
+$\sig{m\_addr}\rightarrow$ memory/cache $\rightarrow\sig{m\_rdata}$/\sig{m\_ready}
+$\rightarrow$ instruction mux $\rightarrow$ ALU $\rightarrow\sig{m\_addr}$. This loop is a false
+path: in \textsc{FetchExec} the bus address is the PC, and in \textsc{Mem} the instruction comes
+from the latched register, so no real signal can travel all the way round.
+
+\subsection{Limitations}
+\begin{itemize}
+  \item No clock frequency was measured for Phase~II. The ECP5 place-and-route tools used in
+        Phase~I were not available, and Yosys has no timing model for 7-series devices. The
+        synthesis numbers are estimates, not post-route utilisation.
+  \item The memory is a simple fixed-latency model that returns a whole line per transfer. A
+        DRAM would add variable latency and burst transfers, and the memory itself was not
+        synthesised.
+  \item The caches are direct-mapped and write-through. Associativity, write-back caches,
+        deeper write buffers and prefetching are not modelled.
+  \item The benchmarks are small (31--947 instructions) and run from cold caches, so
+        compulsory misses carry more weight than they would in long programs.
+  \item The counters stop at EBREAK, so a store still draining from the write buffer after the
+        halt (at most $L$ cycles) is not counted.
+\end{itemize}

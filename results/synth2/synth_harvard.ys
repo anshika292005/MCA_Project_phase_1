@@ -1,0 +1,15 @@
+# Phase II: ideal Harvard (harvard_top, Phase II instruction set), Xilinx 7-series.
+# Run from the repository root:  yosys -l results/logs/synth2_harvard.log results/synth2/synth_harvard.ys
+# As in Phase I the instruction ROM is a black box (measured on its own by
+# results/synth/synth_rom.ys), so the program cannot be hard-wired into the core.
+read_verilog rtl/mem/instr_mem.v rtl/mem/data_mem.v rtl/mem/addr_decoder.v rtl/mem/rw_ctrl.v rtl/mem/harvard_mem.v
+read_verilog rtl/core/regfile.v rtl/core/alu.v rtl/core/imm_gen.v rtl/core/control.v rtl/core/pc_reg.v rtl/core/cpu_core.v
+read_verilog rtl/common/perf_counters.v rtl/harvard_top.v
+blackbox instr_mem
+chparam -set PROG_FILE "programs/memcopy.hex" -set DATA_FILE "programs/memcopy_data.hex" harvard_top
+hierarchy -top harvard_top
+proc
+# same Yosys init-priority workaround as Phase I (see results/comparison.md)
+delete t:$meminit_v2 r:WORDS=1 %i
+synth_xilinx -top harvard_top -family xc7 -flatten
+tee -o results/synth2/harvard_stat.txt stat

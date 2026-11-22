@@ -1,0 +1,8 @@
+# Phase II: the cache module on its own (8 lines x 4 words, write buffer on), Xilinx 7-series.
+# Run from the repository root:  yosys -l results/logs/synth2_cache.log results/synth2/synth_cache.ys
+read_verilog rtl/mem/cache.v
+chparam -set NUM_LINES 8 -set LINE_WORDS 4 -set WBUF 1 -set ENABLE 1 cache
+hierarchy -top cache
+proc
+synth_xilinx -top cache -family xc7 -flatten
+tee -o results/synth2/cache_stat.txt stat
