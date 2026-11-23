@@ -1,0 +1,98 @@
+% Owner: Anshika (Member 2)
+%=====================================================================
+\section{Proposed Solution}
+%=====================================================================
+\subsection{Phase I: Harvard system and shared-memory baseline}
+Fig.~\ref{fig:block1} shows the two Phase~I systems. \sig{harvard\_top} connects a single-cycle
+processor (\sig{cpu\_core}) to a 256-word instruction ROM and, through an address decoder and a
+read/write controller, to a 256-word data RAM and a memory-mapped output register at
+\texttt{0x400}. Any other data address is invalid: a store is ignored, a load returns 0 and
+\sig{d\_fault} is raised. The two ports share no bus and no storage, so a fetch and a load or
+store complete in the same cycle. The baseline \sig{vn\_top} reuses the same register file, ALU,
+immediate generator and decoder in \sig{cpu\_core\_vn}, but reaches one 512-word memory (code in
+words 0--255, data in words 256--511) through a two-state controller (Fig.~\ref{fig:fsm}).
+Loads and stores therefore take a \textsc{FetchExec} cycle and a \textsc{Mem} cycle.
+
+\begin{figure*}[t]
+  \centering
+  \resizebox{0.80\textwidth}{!}{\input{figures/block.tex}}
+  \caption{Phase I. (a) Harvard system: the processor reaches the instruction ROM and the data
+  side through separate ports. (b) Shared-memory baseline: fetches and data accesses use one
+  port to a single memory.}
+  \label{fig:block1}
+\end{figure*}
+
+\begin{figure}[t]
+  \centering
+  \resizebox{0.62\columnwidth}{!}{\input{figures/fsm.tex}}
+  \caption{Two-state controller of the single-bus core (Phase I, kept in Phase II).}
+  \label{fig:fsm}
+\end{figure}
+
+\subsection{Phase II architecture}
+Phase~II keeps both processors and puts a memory hierarchy behind them
+(Fig.~\ref{fig:block2}). Every Phase~II system uses the same lower-level memory,
+\sig{main\_mem}, a single-port memory that holds code at physical addresses
+\texttt{0x000}--\texttt{0x3FF} and data at \texttt{0x400}--\texttt{0x7FF} (the Phase~I baseline
+layout) and answers each request after $L$ cycles. We compare three organisations:
+\begin{itemize}
+  \item \textbf{Modified Harvard} (\sig{mh\_top}): \sig{cpu\_core} with an $N$-line
+        instruction cache and an $N$-line data cache, which share \sig{main\_mem} through an
+        arbiter.
+  \item \textbf{Unified cache}: \sig{cpu\_core\_vn} with one cache of $2N$ lines, the same
+        total capacity (\sig{vnc\_top} with \sig{CACHE\_EN}\,=\,1).
+  \item \textbf{No cache}: \sig{cpu\_core\_vn} with every access going to \sig{main\_mem}
+        (\sig{vnc\_top} with \sig{CACHE\_EN}\,=\,0). With $L=1$ it is the Phase~I baseline,
+        cycle for cycle.
+\end{itemize}
+The Phase~I \sig{harvard\_top}, which has ideal single-cycle memories, remains the reference.
+In both Phase~II tops the address decoder sends only data-RAM accesses to a cache.
+\sig{out\_port} and invalid addresses bypass the caches and finish in their own cycle.
+
+\begin{figure*}[t]
+  \centering
+  \resizebox{0.80\textwidth}{!}{\input{figures/block2.tex}}
+  \caption{Phase II. (a) Modified Harvard: split L1 caches over one shared memory, with an
+  arbiter giving instruction refills priority. (b) Single bus: the same memory behind a unified
+  cache of twice the size, or behind no cache. Both systems use the same cache module and the
+  same \sig{main\_mem}.}
+  \label{fig:block2}
+\end{figure*}
+
+\subsection{Processor extensions}
+To run realistic programs, both processors gained XOR, SLT, SLL and SRL, their immediate forms
+XORI, SLTI, SLLI and SRLI, the branches BLT and BGE, the jumps JAL and JALR, and LUI, all with
+standard RV32I encodings \cite{riscv_spec}. The ALU gained four operations (XOR, signed
+set-less-than, and the two logical shifts by \sig{b[4:0]}). BLT and BGE reuse the zero flag after
+an SLT, the way BEQ and BNE use it after a SUB. JAL and JALR write $\mathrm{PC}+4$, LUI writes the
+U-immediate, and the immediate generator gained the U and J formats. The decoder keeps every
+Phase~I output with its old meaning, so the Phase~I subset decodes exactly as before.
+
+Each core also gained a stall interface:
+\begin{itemize}
+  \item \sig{i\_ready}\,=\,0 (\sig{cpu\_core}): no valid instruction yet. The core decodes a
+        NOP, so nothing is written or accessed, and holds its PC.
+  \item \sig{d\_ready}\,=\,0 (\sig{cpu\_core}): the load or store of this cycle has not
+        finished. The PC and register file are held and the data request stays on the port.
+  \item \sig{m\_ready}\,=\,0 (\sig{cpu\_core\_vn}): the bus transfer has not finished. The
+        state, PC, latched instruction and register file are held.
+\end{itemize}
+The Phase~I top levels tie these inputs to 1. With them tied, the enable equations reduce to the
+Phase~I ones, and re-running the Phase~I regression gives byte-identical logs: every Phase~I
+cycle count is unchanged.
+
+\subsection{Timing design rules}
+Every path from the memory back to the processor must end in a register. Otherwise the system
+contains a combinational loop, which a static timing tool cannot analyse. We followed two rules:
+\begin{enumerate}
+  \item \textbf{No forwarding of refill data.} When a miss is served, the cache writes the line
+        into its array and answers as a hit in the \emph{next} cycle. If the refill data went
+        straight to the core, it would feed the decoder, the ALU, the next data address, the
+        D-cache request and the arbiter's address multiplexer, and so reach the memory input
+        again.
+  \item \textbf{The I-cache request is \sig{\textasciitilde halted}, a register.} If it were
+        \sig{\textasciitilde halt}, which also depends on the EBREAK decoded from the fetched
+        word, the request would depend on the cache's own output.
+\end{enumerate}
+Section~\ref{sec:area} shows that the modified Harvard design synthesises with no loop warning,
+and that copies which break either rule produce loops.

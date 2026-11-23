@@ -1,0 +1,27 @@
+% Owner: Anshika (Member 2)
+\begin{abstract}
+When instruction fetches and data accesses share one memory port, as in a von Neumann machine,
+every load or store delays the next fetch. In Phase~I we removed this structural hazard with a
+Harvard organisation: a single-cycle RV32I-subset processor with separate instruction and data
+memories ran four benchmarks at CPI\,=\,1.00, while a single-port baseline needed
+1\,$+$\,$f_{\text{LS}}$ (1.02--1.37). Phase~II replaces the ideal memories with a realistic
+hierarchy. One parameterised, direct-mapped, write-through cache with an optional one-entry write
+buffer is used as an instruction cache, a data cache, and a unified cache. Below the caches is a
+single shared memory with a request/ready handshake and a latency of $L$ cycles. A fixed-priority
+arbiter lets the split caches share that memory, giving a \emph{modified Harvard} system, which
+we compare with a single-bus system using a unified cache of the same total capacity and with a
+single-bus system using no cache. Both processors gained thirteen instructions and a stall interface
+that leaves Phase~I timing unchanged. An independent Python instruction-set simulator predicts every
+miss count, and 528 system simulations pass 9888 checks against it. Over eight programs at $L=8$
+with 8-line caches, the modified Harvard system reaches a suite CPI of 1.69, the unified cache
+2.72 and no cache 9.88. Two effects explain most of the gap: the single port charges every load
+and store a second access, and code and data alias in the unified cache. The unified cache wins
+only for very small caches and for a program whose code is larger than the instruction cache. The
+write buffer removes 15\% of the cycles of the split design. Synthesis with Yosys shows no
+combinational loop in the modified Harvard design.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Harvard architecture, modified Harvard, split cache, unified cache, write buffer, memory latency,
+RISC-V, Verilog
+\end{IEEEkeywords}

@@ -1,0 +1,47 @@
+% Owner: Anshika (Member 2)
+%=====================================================================
+\section{Conclusion and Future Work}
+%=====================================================================
+Phase~I showed that separate instruction and data paths remove the structural hazard of a
+shared port: CPI\,=\,1.00 against $1+f_{\text{LS}}$. Phase~II moved the comparison to a
+realistic hierarchy, with one reusable direct-mapped cache, one shared memory of latency $L$,
+and an arbiter. The same RTL and the same memory were measured as a modified Harvard system, as
+a single bus with a unified cache of equal capacity, and as a single bus with no cache. An
+independent golden model predicted every miss count, and 528 system simulations matched it in
+all 9888 checks. Phase~I timing was preserved exactly.
+
+The results lead to three conclusions.
+\begin{itemize}
+  \item Caches are essential as soon as memory is slower than the core. At $L=8$ the suite CPI
+        is 9.88 without a cache, 2.72 with a unified cache and 1.69 with split caches.
+  \item The split organisation wins mainly because it keeps two accesses per cycle and keeps
+        code and data out of each other's way. With our memory map, most unified misses are
+        code/data conflict misses: moving the data by half a cache cuts them from 438 to 165.
+        The unified cache wins only when the code footprint is larger than the I-cache, or when
+        both caches are tiny.
+  \item A one-entry write buffer removes 15\% of the cycles of the split design. It is limited by
+        back-to-back stores and by drains that delay instruction refills. Without a cache it
+        cannot help at all.
+\end{itemize}
+The modified Harvard design synthesises without combinational loops, because refill data is
+never forwarded and the I-cache request comes from a register.
+
+\textbf{Future work.} The next steps are:
+\begin{itemize}
+  \item set-associative caches and a victim cache \cite{jouppi1990}, to remove the conflict
+        misses measured here;
+  \item a write-back D-cache and a deeper write buffer that can be read by loads
+        \cite{skadron1997};
+  \item burst refills with critical-word-first delivery, which would need a registered bypass
+        so as to respect the no-forwarding rule;
+  \item a pipelined core, where split caches matter even more because fetch and memory access
+        overlap every cycle;
+  \item place-and-route on an FPGA board, to measure Fmax and post-route utilisation of the
+        cached designs.
+\end{itemize}
+
+\section*{Acknowledgment}
+The authors thank the faculty and peers of the Modern Computer Architecture laboratory for their
+discussions. All performance numbers in this report come from reproducible simulation and
+synthesis scripts in the project repository. % TODO (all members): state here how AI tools were
+% used, as the course AI policy requires, before submission.

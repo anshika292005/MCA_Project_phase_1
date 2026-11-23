@@ -1,0 +1,452 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{url}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\sig}[1]{\texttt{#1}}
+
+\begin{document}
+
+\title{Instruction and Data Memory Hierarchy:\\
+Separate Instruction and Data Paths for a\\Single-Cycle RV32I-Subset Processor}
+
+\author{\IEEEauthorblockN{Yashpal, Anshika, Ankit, Samriddhi, Ayush}
+\IEEEauthorblockA{Modern Computer Architecture, Project 9 (Phase I)\\
+Department of Computer Science and Artificial Intelligence\\
+Newton School of Technology, Rishihood University, Sonipat, Haryana}}
+
+\maketitle
+
+\begin{abstract}
+A processor needs memory for two different jobs: fetching its next instruction and reading or
+writing the data that instruction operates on. When both jobs go through one memory port, as in a
+von Neumann machine, a load or store cannot overlap with the fetch of its own instruction and
+must wait an extra cycle. A Harvard organisation avoids the conflict by placing instructions and
+data in separate memories reached through separate ports. We implement such a memory organisation
+in synthesizable Verilog---a 256-word instruction ROM, a 256-word data RAM, an address decoder
+with a memory-mapped output register and fault detection, and a read/write controller---and drive
+it with a single-cycle processor for ten RV32I instructions. For comparison we built a baseline in
+which the same processor logic shares one 512-word memory through a two-state controller. Four
+benchmark programs run unchanged on both systems, and a self-checking testbench confirms that the
+final register file and data memory match. The Harvard system finishes every program at
+CPI\,=\,1.00, while the baseline needs between 1.02 and 1.37 cycles per instruction, exactly one
+extra cycle per load or store. Yosys synthesis for a Xilinx 7-series target estimates that the
+Harvard system also uses about 40\% fewer LUTs, and place-and-route on a Lattice ECP5 gives it the
+higher clock frequency (43.6 vs 37.4\,MHz), for a 1.19--1.60$\times$ shorter execution time.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Harvard architecture, von Neumann architecture, memory organisation, RISC-V, Verilog, CPI
+\end{IEEEkeywords}
+
+%=====================================================================
+\section{Introduction}
+%=====================================================================
+In von Neumann's EDVAC design, instructions and data are stored in the same memory
+\cite{vonneumann1945}. Because programs can be loaded and modified like any other data, the
+computer is general purpose, but every instruction now needs at least one memory transfer
+(its fetch), and loads and stores need a second one. Backus pointed out that the single
+connection between processor and store limits how fast any program can run and called it the
+``von~Neumann bottleneck'' \cite{backus1978}. As processor speed has grown much faster than
+memory speed, this limit has become more important, a trend described as the memory wall
+\cite{wulf1995}.
+
+The simplest visible form of the bottleneck is a structural hazard: when a fetch and a data
+access need the same port in the same cycle, one of them must wait \cite{hp_quant}. A Harvard
+organisation removes this hazard by giving instructions and data their own memories, address
+buses and data buses. Real processors usually apply the idea only at the top of the memory
+hierarchy, with split level-1 instruction and data caches in front of a unified main memory
+\cite{hp_quant,ph_riscv}.
+
+Our goal in Phase~I was to make the effect of this choice measurable. We built both
+organisations around the same small processor so that the memory organisation is the only
+difference between them, ran identical programs on both, and counted cycles. This report
+describes:
+\begin{itemize}
+  \item a Harvard memory subsystem (\sig{harvard\_mem}) with independent instruction and
+        data ports, address decoding and read/write control;
+  \item a single-cycle RV32I-subset processor (\sig{cpu\_core}) that uses both ports in the
+        same clock cycle;
+  \item a shared-memory baseline (\sig{vn\_top}) with a single port and a two-state
+        controller; and
+  \item a self-checking verification flow, performance counters and synthesis results that
+        compare the two systems.
+\end{itemize}
+
+%=====================================================================
+\section{Literature Review}
+%=====================================================================
+\subsection{Stored-program memory organisations}
+The von Neumann organisation keeps instructions and data in one memory with one address bus and
+one data bus \cite{vonneumann1945}. It lets code and data share capacity in any proportion and
+lets programs be loaded as data, but only one transfer can take place per memory cycle, so
+instruction fetches and data transfers are serialised \cite{backus1978}. The Harvard
+organisation, named after the Harvard Mark~I relay computer, uses physically separate memories
+for instructions and data. This doubles the available bandwidth, but the split between program
+and data space is fixed and a second set of buses is needed \cite{hp_quant}.
+
+\subsection{Split caches and the modified Harvard design}
+General-purpose processors seldom use a pure Harvard design. Instead, they split the cache
+closest to the pipeline. Smith's survey of cache memories compares split instruction/data caches
+with unified caches and notes that the split lets a fetch and a data reference be serviced in
+the same cycle, at the cost of less flexible use of cache capacity \cite{smith1982}. Current
+textbooks present the split level-1 cache backed by a unified level-2 cache and main memory as
+the standard arrangement \cite{hp_quant,ph_riscv}. Microcontrollers and DSPs take the same
+approach with on-chip memories: program flash and data SRAM sit on separate buses so that an
+operand can be read while the next instruction is fetched. Because processor speed keeps
+outgrowing memory speed \cite{wulf1995}, this bandwidth close to the core remains valuable.
+
+\subsection{Single-cycle versus multi-cycle datapaths}
+Textbook processor designs show directly how the datapath depends on the memory organisation.
+A single-cycle processor completes a load within one clock period, so it must read an
+instruction word and a data word at the same time; it therefore needs a separate instruction
+memory and data memory \cite{ph_riscv,harris_riscv}. A multi-cycle processor can share one
+memory because it fetches in one cycle and accesses data in a later one, at the cost of more
+cycles per memory instruction \cite{harris_riscv}. Our two designs follow these two textbook
+cases: the Harvard system uses the single-cycle datapath, and the baseline uses a minimal
+multi-cycle controller.
+
+\subsection{RISC-V for teaching and FPGA cores}
+RISC-V is an open ISA with a small base integer instruction set \cite{riscv_spec}. All
+instructions are 32 bits long and the register fields are always in the same bit positions,
+which keeps a decoder small. Asanovi\'{c} and Patterson argue that an ISA should be a free, open
+standard and give RISC-V's simplicity and open licence as reasons to adopt it
+\cite{asanovic2014}. It is now the ISA used in standard computer organisation textbooks
+\cite{ph_riscv,harris_riscv}. Because the ISA is open, many RV32I soft cores have been built for
+FPGAs. Miyazaki \emph{et al.} present RVCoreP, a five-stage pipelined RV32I core in Verilog
+evaluated on a Xilinx Artix-7 device. They tune the fetch unit, ALU and data memory for clock
+frequency and compare IPC and resource use with VexRiscv \cite{miyazaki2020}. That work aims at
+performance. Our core is deliberately simpler, with no pipeline, so that any change in cycle count
+can only come from the memory organisation.
+
+%=====================================================================
+\section{Proposed Solution}
+%=====================================================================
+\begin{figure*}[t]
+  \centering
+  \resizebox{0.86\textwidth}{!}{\input{../figures/block.tex}}
+  \caption{(a) Harvard system: the processor reaches the instruction ROM and the data side
+  through separate ports, so a fetch and a load/store can happen in the same cycle. (b)
+  Shared-memory baseline: fetches and data accesses use one port to a single memory.}
+  \label{fig:block}
+\end{figure*}
+
+\subsection{Design overview}
+Fig.~\ref{fig:block} shows the two systems. They implement the same instruction subset
+(ADD, SUB, AND, OR, ADDI, LW, SW, BEQ, BNE and EBREAK, with standard RV32I encodings
+\cite{riscv_spec}), use the same data address map, and are measured by the same
+\sig{perf\_counters} module. The baseline reuses the register file, ALU, immediate generator
+and control decoder of the Harvard processor, so the only difference between the two systems is
+how they reach memory.
+
+\subsection{Memory map}
+The instruction ROM holds 256 words (byte addresses \texttt{0x000}--\texttt{0x3FF}) and is
+initialised from a hex file. Table~\ref{tab:map} shows the data address space. The baseline
+stores code in words 0--255 and data in words 256--511 of its single memory, and its top level
+adds \texttt{0x400} to data addresses. This lets both systems run the same program and data
+images without modification.
+
+\begin{table}[t]
+  \caption{Data address map (both systems)}
+  \label{tab:map}
+  \centering
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    Byte address & Region \\
+    \midrule
+    \texttt{0x000}--\texttt{0x3FF} & Data RAM, 256 words \\
+    \texttt{0x400} & \sig{out\_port} register (write-only, reads 0) \\
+    any other & invalid: write ignored, read 0, \sig{d\_fault}\,=\,1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Harvard memory subsystem}
+\sig{harvard\_mem} wraps four modules:
+\begin{itemize}
+  \item \sig{instr\_mem}: a 256$\times$32 read-only array with combinational read, addressed by
+        \sig{i\_addr[9:2]}.
+  \item \sig{data\_mem}: a 256$\times$32 RAM with combinational read and a write on the rising
+        clock edge.
+  \item \sig{addr\_decoder}: compares the data address with the map in Table~\ref{tab:map} and
+        asserts exactly one of \sig{sel\_ram}, \sig{sel\_io} and \sig{addr\_fault}.
+  \item \sig{rw\_ctrl}: turns the processor's write and read requests into a RAM write enable
+        or an \sig{out\_port} write enable, and returns RAM data or zero on \sig{d\_rdata}.
+\end{itemize}
+The instruction side and the data side share no address bus, data bus or storage array. A fetch
+and a data access therefore never compete for a resource, and both complete in the same cycle.
+
+\subsection{Single-cycle processor}
+\sig{cpu\_core} executes one instruction per clock period (Fig.~\ref{fig:datapath}). The program
+counter addresses the instruction ROM. The control unit decodes the opcode, \sig{funct3} and
+\sig{funct7} fields, generating control signals for register writes, ALU operation selection,
+memory read/write strobes, and branch decisions. The register file supplies two operands, and
+the ALU computes a result, an effective address or a branch comparison. For LW and SW the data
+port is accessed in the very same period, and the result is written back on the next rising edge.
+Branches subtract the two operands and evaluate the condition based on the ALU zero flag.
+EBREAK freezes the program counter and asserts \sig{halt}. The core contains no internal memory
+of its own; it orchestrates the datapath and drives the independent memory ports.
+
+\begin{figure}[t]
+  \centering
+  \resizebox{0.94\columnwidth}{!}{\input{../figures/datapath.tex}}
+  \caption{Single-cycle datapath of \sig{cpu\_core}. The highlighted LW path uses the
+  instruction memory and the data memory in the same clock period.}
+  \label{fig:datapath}
+\end{figure}
+
+\subsection{Shared-memory baseline}
+\sig{cpu\_core\_vn} has one memory bus and a two-state controller (Fig.~\ref{fig:fsm}). In
+\textsc{FetchExec} the bus carries the program counter, and ALU, branch and EBREAK instructions
+finish in that same cycle. A load or store needs the bus a second time, so the controller latches
+the instruction word and moves to \textsc{Mem}, where the bus carries the data address. When the
+access completes, the program counter advances and the controller returns to \textsc{FetchExec}.
+Loads and stores therefore take two cycles; every other instruction takes one.
+
+\begin{figure}[t]
+  \centering
+  \resizebox{0.68\columnwidth}{!}{\input{../figures/fsm.tex}}
+  \caption{Two-state controller of the shared-memory baseline.}
+  \label{fig:fsm}
+\end{figure}
+
+\subsection{Performance counters}
+\sig{perf\_counters} counts clock cycles, retired instructions, data accesses (loads, stores,
+\sig{out\_port} writes and faulting accesses) and \emph{simultaneous} cycles, in which an
+instruction fetch and a data access take place together. EBREAK counts as a retired
+instruction, and all counters freeze after it.
+
+\subsection{Verification flow}
+Test programs are written in assembly and converted to hex images by a two-pass Python assembler
+(\sig{tools/asm.py}). The assembler's self-test checks 13 encodings against hand-computed values.
+The four benchmark programs are:
+\begin{itemize}
+  \item \sig{basic}: one instance of each instruction;
+  \item \sig{array\_sum}: summing an array in memory;
+  \item \sig{memcopy}: copying eight words, with a load and a store in each iteration;
+  \item \sig{count\_loop}: a register-only loop with a single store at the end.
+\end{itemize}
+Verification is done at three levels, and every testbench is self-checking and prints
+\texttt{PASS} or \texttt{FAIL}:
+\begin{enumerate}
+  \item Unit tests for \sig{addr\_decoder} (both sides of every region boundary),
+        \sig{instr\_mem}, \sig{data\_mem} and \sig{harvard\_mem}, including a cycle in which a
+        fetch and a data write occur together.
+  \item System tests that run each program on \sig{harvard\_top} and on \sig{vn\_top} until halt
+        and compare registers, data memory, \sig{out\_port} and counters with expected values.
+        They also count the cycles in which the top-level \sig{d\_fault} output is high. In
+        \sig{basic}, a store and a load to the invalid address \texttt{0x808} must raise it
+        exactly twice, and the ignored store must leave the word it aliases (data word~2 on the
+        Harvard system, code word~2 on the baseline) unchanged.
+  \item A comparison test (\sig{tb\_compare}) that runs both systems on the same program. It
+        checks that all 32 registers and all 256 data words agree, that Harvard cycles equal
+        retired instructions, that baseline cycles equal Harvard cycles plus data accesses, and that
+        both systems raise \sig{d\_fault} in the same number of cycles.
+\end{enumerate}
+The RTL is Verilog-2001 \cite{ieee1364}, simulated with Icarus Verilog; waveforms were inspected
+in GTKWave and Surfer. A single \sig{Makefile} runs the whole flow.
+
+\begin{figure*}[t]
+  \centering
+  \resizebox{0.86\textwidth}{!}{\input{../figures/wave.tex}}
+  \caption{First twelve cycles of \sig{memcopy}, generated from the simulation trace by
+  \sig{tools/vcd2tikz.py} (one column per cycle, sampled mid-cycle, hex addresses). On the
+  Harvard system the data address is active in the same cycle as the instruction address. On the
+  baseline each LW/SW occupies an extra \textsc{Mem} cycle on the shared bus.}
+  \label{fig:wave}
+\end{figure*}
+
+\subsection{Results}
+\begin{table}[t]
+  \caption{Simulation results (Icarus Verilog)}
+  \label{tab:results}
+  \centering
+  \setlength{\tabcolsep}{3.5pt}
+  \begin{tabular}{@{}lrrrrrrr@{}}
+    \toprule
+    & & & \multicolumn{2}{c}{Harvard} & \multicolumn{2}{c}{Baseline} & \\
+    \cmidrule(lr){4-5}\cmidrule(lr){6-7}
+    Program & Instr & LS\% & Cyc & CPI & Cyc & CPI & Speed-up \\
+    \midrule
+    basic      & 19 & 36.8 & 19 & 1.00 & 26 & 1.37 & 1.37$\times$ \\
+    array\_sum & 38 & 26.3 & 38 & 1.00 & 48 & 1.26 & 1.26$\times$ \\
+    memcopy    & 54 & 31.5 & 54 & 1.00 & 71 & 1.31 & 1.31$\times$ \\
+    count\_loop& 64 &  1.6 & 64 & 1.00 & 65 & 1.02 & 1.02$\times$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Table~\ref{tab:results} summarises the simulation results, and every testbench passed. The
+Harvard system reaches CPI\,=\,1.00 on every program, and its simultaneous-cycle count equals its
+data-access count (7, 10, 17 and 1), so every data access overlapped a fetch. The baseline never
+has a simultaneous cycle, and on every program its cycle count is the Harvard count plus the
+number of data accesses. Its CPI is therefore
+\begin{equation}
+  \mathrm{CPI}_{\text{baseline}} = 1 + f_{\text{LS}},
+\end{equation}
+where $f_{\text{LS}}$ is the fraction of instructions that access data. In the baseline architecture,
+every memory transaction incurs an extra cycle penalty due to the single-port structural bottleneck,
+whereas the dual-memory Harvard layout executes concurrent instruction fetch and data memory access
+without contention. The advantage of the Harvard system grows with how memory-intensive a program is:
+1.02$\times$ for the register-only loop and 1.37$\times$ for \sig{basic}. Fig.~\ref{fig:wave} shows
+this cycle by cycle for \sig{memcopy}. In cycles 4 and 5 the Harvard system fetches the LW and then the SW while
+performing their data accesses. The baseline needs cycles 4--7 for the same two instructions.
+
+\begin{table}[t]
+  \caption{Yosys synthesis estimate, Xilinx 7-series}
+  \label{tab:synth}
+  \centering
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}lrrrr@{}}
+    \toprule
+    Design & Logic & LUT-RAM & Total & FFs \\
+    & LUTs & LUTs & LUTs & \\
+    \midrule
+    Harvard: core + data side & 350 & 176 & 526 & 194 \\
+    Harvard: instruction ROM  & 128 &   0 & 128 &   0 \\
+    \textbf{Harvard total}    & \textbf{478} & \textbf{176} & \textbf{654} & \textbf{194} \\
+    \textbf{Shared-memory baseline} & \textbf{780} & \textbf{304} & \textbf{1084} & \textbf{227} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The second half of the comparison is hardware cost. Both top levels were synthesized with Yosys
+\cite{yosys} (\texttt{synth\_xilinx -family xc7}); Table~\ref{tab:synth} gives the results. The
+instruction ROM was synthesized separately with pseudo-random contents. Synthesized with a real
+program, Yosys would hard-wire that program and remove decoder logic the program never uses, an
+optimisation the baseline's writable memory does not allow, so separate synthesis keeps the
+comparison fair. Even with the ROM included, the Harvard system uses about 40\% fewer LUTs
+and 33 fewer flip-flops. The baseline needs a 512-word memory, address multiplexing in front of
+the single port, and the controller; its 33 extra flip-flops are the 32-bit latched instruction
+and the one-bit state register. These numbers are synthesis estimates rather than post-route
+utilisation.
+
+\begin{table}[t]
+  \caption{Fmax after place and route, Lattice ECP5 (nextpnr)}
+  \label{tab:fmax}
+  \centering
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}lrr@{}}
+    \toprule
+    Build & Critical path & Fmax \\
+    \midrule
+    Harvard               & 22.93\,ns & \textbf{43.62\,MHz} \\
+    Baseline, fetch leg   & 26.77\,ns & 37.36\,MHz \\
+    Baseline, MEM leg     & 18.65\,ns & 53.63\,MHz \\
+    \textbf{Baseline}     & 26.77\,ns & \textbf{37.36\,MHz} \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{6pt}
+  \begin{tabular}{@{}lrrr@{}}
+    \toprule
+    Program & Harvard & Baseline & Speed-up \\
+    & time (ns) & time (ns) & \\
+    \midrule
+    basic      &  436 &  696 & 1.60$\times$ \\
+    array\_sum &  871 & 1285 & 1.47$\times$ \\
+    memcopy    & 1238 & 1900 & 1.54$\times$ \\
+    count\_loop& 1467 & 1740 & 1.19$\times$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Fewer cycles only help if the clock does not slow down, so we also measured maximum clock
+frequency. Yosys has no timing model for 7-series parts and Vivado does not run on our machines,
+so both designs were placed and routed for a Lattice ECP5 (LFE5U-85F) with \texttt{nextpnr-ecp5}
+(Table~\ref{tab:fmax}; execution time $=$ cycles$/$Fmax). Here the instruction ROM holds
+pseudo-random contents rather than being removed, because its read delay is on the critical path.
+The baseline's structural loop stops nextpnr from timing it at all, so the baseline was timed as
+two copies, one with only the fetch-state paths ($\sig{m\_addr} = \mathrm{PC}$) and one with only
+the \textsc{Mem}-state paths ($\sig{instr} = \sig{ir}$). Every real path appears in one of them
+and the impossible loop in neither, and the baseline's Fmax is the slower of the two. The Harvard
+system's single cycle contains two memory reads (ROM, then data RAM) yet reaches 43.62\,MHz. The
+baseline's fetch leg contains only one read, but from a 512-word LUT-RAM with a deeper read
+multiplexer, and it limits the baseline to 37.36\,MHz. The Harvard system therefore wins on both
+CPI and clock frequency, and its execution time is 1.19--1.60$\times$ shorter. These results are
+for an ECP5 with one placement seed, not for a Xilinx device.
+
+%=====================================================================
+\section{Individual Contributions}
+%=====================================================================
+Each member developed their part on their own branch (\sig{m1-memory} to \sig{m4-verification})
+and merged it into \sig{main} through a pull request. Table~\ref{tab:contrib} lists who built what;
+the repository's commit history shows the same split.
+
+\begin{table}[t]
+  \caption{Individual contributions}
+  \label{tab:contrib}
+  \centering
+  \footnotesize
+  \begin{tabular}{@{}l>{\raggedright}p{1.45cm}>{\raggedright\arraybackslash}p{4.1cm}@{}}
+    \toprule
+    Member & Role & Modules / artefacts \\
+    \midrule
+    Yashpal   & Harvard memory & \sig{instr\_mem}, \sig{data\_mem}, \sig{addr\_decoder},
+                \sig{rw\_ctrl}, \sig{harvard\_mem} \\
+    Anshika   & Processor, integration & \sig{pc\_reg}, \sig{regfile}, \sig{alu}, \sig{imm\_gen},
+                \sig{control}, \sig{cpu\_core}, \sig{harvard\_top}; repository set-up and PR merges \\
+    Ankit     & Baseline, metrics & \sig{perf\_counters}, \sig{shared\_mem}, \sig{cpu\_core\_vn},
+                \sig{vn\_top}; comparison table; Yosys synthesis \\
+    Samriddhi & Verification & assembler, benchmark programs, unit/system/comparison testbenches,
+                \sig{Makefile}, waveform tool and logs \\
+    Ayush     & Report, video & IEEE report and figures, video script and editing, README and docs \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Yashpal} built the Harvard memory subsystem: the instruction ROM, the data RAM with
+synchronous write, the address decoder with its \sig{out\_port} and fault regions, the read/write
+controller, and the \sig{harvard\_mem} wrapper that keeps the two ports independent.
+
+\textbf{Anshika} built the single-cycle processor (program counter, register file, ALU,
+immediate generator and control decoder), connected it in \sig{cpu\_core} and
+\sig{harvard\_top}, created the repository with its initial structure and interface
+specification, and reviewed and merged the other members' pull requests.
+
+\textbf{Ankit} built the performance counters, the 512-word shared memory, the two-state baseline
+processor and \sig{vn\_top}, and wrote the comparison analysis and the Yosys synthesis
+scripts and results.
+
+\textbf{Samriddhi} wrote the RV32I-subset assembler and its self-test, the four benchmark
+programs, the unit, system and comparison testbenches, the simulation \sig{Makefile} with its
+GTKWave/Surfer configurations, and the tool that turns a simulation trace into Fig.~\ref{fig:wave}.
+
+\textbf{Ayush} wrote this report and its TikZ figures, wrote the script for the prototype
+video and edited it, and maintained the README and project documentation.
+
+%=====================================================================
+\section{Conclusion and Phase II Plan}
+%=====================================================================
+We built a Harvard memory organisation and a shared-memory baseline around the same
+RV32I-subset processor and measured both. In simulation, separate instruction and data paths
+remove the extra cycle that each load or store needs on a shared port, giving CPI\,=\,1.00
+against $1 + f_{\text{LS}}$, and synthesis estimates show that the Harvard system is also the
+smaller and, on an ECP5, the faster-clocked of the two at this size. For Phase~II we plan to:
+\begin{enumerate}
+  \item add small instruction and data caches in front of a unified memory, turning the design
+        into a modified Harvard organisation;
+  \item model multi-cycle memory latency and study the resulting stalls;
+  \item implement both systems in Vivado on a Xilinx board to confirm the ECP5 clock-frequency
+        results and measure post-route utilisation; and
+  \item extend the instruction subset with shifts, jumps and comparisons.
+\end{enumerate}
+
+\section*{Acknowledgment}
+The authors acknowledge the helpful discussions with peers and faculty during the Modern
+Computer Architecture laboratory sessions. Each team member thoroughly reviewed, validated, and
+simulated the hardware design and verification modules submitted in this project repository.
+All performance metrics and comparison data reported are directly derived from reproducible
+simulation testbenches and open-source synthesis flows.
+
+\bibliographystyle{IEEEtran}
+\bibliography{../refs}
+
+\end{document}

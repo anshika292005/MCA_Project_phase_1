@@ -1,99 +1,128 @@
 # Project 9: Instruction and Data Memory Hierarchy
 
-**Modern Computer Architecture, Phase I.** A Harvard-style memory organisation in Verilog (separate
-instruction and data memories), driven by a small single-cycle RV32I-subset processor and compared
-against a shared-memory (Von Neumann) baseline.
+**Modern Computer Architecture, Phases I and II.**
 
-With separate memories, the processor fetches the next instruction and performs a load or store in
-the **same clock cycle**, so every instruction takes one cycle (CPI = 1.00). In the baseline, code
-and data share one memory port, so each load or store costs an extra cycle
-(CPI = 1 + load/store fraction). We run the same programs on both and measure the difference.
+- **Phase I** built a Harvard memory organisation in Verilog (separate instruction and data
+  memories), driven by a single-cycle RV32I-subset processor, and compared it with a
+  shared-memory (von Neumann) baseline.
+- **Phase II** replaces the ideal memories with a realistic hierarchy: one reusable direct-mapped
+  cache (write-through, no-write-allocate, optional write buffer) used as I-cache, D-cache or
+  unified cache, a shared lower-level memory with latency L, and an arbiter. It compares a
+  **modified Harvard** system (split caches over one memory) with a **unified cache** of the same
+  capacity and with **no cache**.
+
+Final report: [report/main.pdf](report/main.pdf). The Phase I report is kept in
+[report/phase1/](report/phase1/).
 
 ## Team
 
-| Member | Name / GitHub | Role | Owns |
-|---|---|---|---|
-| Member 1 | Yashpal (`@Yashpal-2004`) | Harvard memory core | `rtl/mem/` |
-| Member 2 | Anshika (`@anshika292005`) | Processor and top-level integration | `rtl/core/`, `rtl/harvard_top.v` |
-| Member 3 | Ankit (`@Ankit35027`) | Shared-memory baseline and metrics | `rtl/common/`, `rtl/baseline/`, `results/comparison.md` |
-| Member 4 | Samriddhi (`@samriddhi-techy`) | Verification and programs | `tb/`, `programs/`, `tools/`, `sim/` |
-| Member 5 | Ayush | Report, video, repository lead | `report/`, `video/`, `README.md` |
+| Member | Name / GitHub | Phase I | Phase II | Owns (Phase II) |
+|---|---|---|---|---|
+| Member 1 | Yashpal (`@Yashpal-2004`) | Harvard memory core | cache and shared memory | `rtl/mem/cache.v`, `rtl/mem/main_mem.v` |
+| Member 2 | Anshika (`@anshika292005`) | processor and integration | ISA extension, stall interface, modified-Harvard top, report lead | `rtl/core/`, `rtl/harvard_top.v`, `rtl/mh_top.v`, `README.md` |
+| Member 3 | Ankit (`@Ankit35027`) | baseline and metrics | baseline core, arbiter, counters, single-bus top, synthesis | `rtl/baseline/`, `rtl/common/`, `results/synth2/`, `results/phase2/README.md` |
+| Member 4 | Samriddhi (`@samriddhi-techy`) | verification and programs | assembler, golden model, programs, testbenches, sweep, figures | `tb/`, `programs/`, `tools/`, `sim/` |
+| Member 5 | Ayush | report, video, repository lead | (not part of Phase II) | |
 
-## Block diagram
+The Phase II file ownership and the commit plan are in
+[docs/phase2_work_split.md](docs/phase2_work_split.md). Interview preparation is in
+[docs/phase2_interview_prep.md](docs/phase2_interview_prep.md).
+
+## Block diagram (Phase II)
 
 ```
-                Harvard (harvard_top)                          Baseline (vn_top)
+  (a) Modified Harvard: mh_top                         (b) Single bus: vnc_top
 
-             +-----------+   i_addr   +-----------+         +-------------+  m_addr  +------------+
-             |           |----------->| instr_mem |         |             |--------->|            |
-             |           |<-----------|  (ROM)    |         | cpu_core_vn |<---------| shared_mem |
-             | cpu_core  |   i_rdata  +-----------+         | FETCH_EXEC/ | m_rdata  | code 0-255 |
-             | (single   |                                  |    MEM FSM  |--------->| data 256-  |
-             |  cycle)   |   d_addr   +-----------+         +-------------+  m_we    |       511  |
-             |           |----------->| decoder + |                ^                 +------------+
-             |           |<-----------| rw_ctrl + |--> out_port    |  one port: fetch OR data
-             +-----------+   d_rdata  | data_mem  |                   access, never both
-                   |                  +-----------+
-                   v
-             perf_counters (cycles, instructions, data accesses, simultaneous cycles)
+  +----------+ i_addr  +---------+                     +-------------+        +----------------+
+  |          |-------->| I-cache |---+                 | cpu_core_vn |------->| unified cache  |---+
+  | cpu_core |<--------| N lines |   |   +---------+   | FETCH / MEM |<-------| 2N lines       |   |
+  | single   | i_ready +---------+   +-->|         |   +-------------+ m_ready| (or uncached)  |   |
+  | cycle    |                           | arbiter |         |                +----------------+   |
+  |          | d_addr  +---------+ RAM   | I > D   |         +--> decoder: out_port / invalid      |
+  |          |-------->| decoder |---+   | no pre- |              addresses bypass the cache       |
+  |          |<--------| rw_ctrl |   |   | emption |                                               |
+  +----------+ d_ready +---------+   v   +---------+                 +---------------------------+ |
+                    out_port  +---------+    |                       | main_mem: code 0x000-3FF, |<+
+                              | D-cache |----+--> one port --------->| data 0x400-7FF, latency L |
+                              | N lines |                            +---------------------------+
+                              | + wbuf  |       (the same main_mem in both systems)
+                              +---------+
 ```
 
-Detailed figures (block diagram, datapath, FSM, waveform) are in the report, `report/main.pdf`.
+## Memory map
 
-## Memory map (data side, identical on both designs)
-
-| Byte address | Region |
+| Byte address (data space) | Region |
 |---|---|
-| `0x000`-`0x3FF` | Data RAM, 256 words |
-| `0x400` | `out_port` register (write-only, reads 0) |
-| anything else | invalid: write ignored, read returns 0, `d_fault` = 1 |
+| `0x000`-`0x3FF` | data RAM, 256 words (physical `0x400`-`0x7FF` in `main_mem`) |
+| `0x400` | `out_port` register (write-only, reads 0), never cached |
+| anything else | invalid: write ignored, read returns 0, `d_fault` = 1, never cached |
 
-Instructions live in a separate 256-word ROM (Harvard) or in words 0-255 of the shared memory
-(baseline, where data occupies words 256-511).
+Code occupies physical `0x000`-`0x3FF` (256 words).
 
-## Running the simulation
+## Instruction set
 
-Requirements: Icarus Verilog (`iverilog`, `vvp`), Python 3, and a waveform viewer: GTKWave, or
-[Surfer](https://surfer-project.org/) on macOS (`brew install surfer`; Homebrew no longer ships GTKWave).
+- Phase I: ADD, SUB, AND, OR, ADDI, LW, SW, BEQ, BNE, EBREAK.
+- Phase II adds: XOR, SLT, SLL, SRL, XORI, SLTI, SLLI, SRLI, BLT, BGE, JAL, JALR, LUI
+  (standard RV32I encodings).
+
+Both cores also have a stall interface (`i_ready`/`d_ready`, `m_ready`). The Phase I tops tie it
+to 1, and their cycle counts are unchanged.
+
+## Running everything
+
+Requirements: Icarus Verilog (`iverilog`, `vvp`), Python 3, Yosys (synthesis), tectonic or
+pdfLaTeX (report), and GTKWave or [Surfer](https://surfer-project.org/) for waveforms.
 
 ```sh
 cd sim
-make asm       # assemble programs/*.s -> *.hex (and run the assembler self-test)
-make unit      # unit tests: addr_decoder, instr_mem, data_mem, harvard_mem
-make harvard   # every program on the Harvard system
-make vn        # every program on the shared-memory baseline
-make compare   # both designs side by side, prints the comparison table
-make waves PROG=memcopy   # open the comparison waveform (GTKWave, or Surfer if no GTKWave)
-make figure    # regenerate the report's waveform figure from the simulation
+make all        # Phase I + Phase II regression, logs in ../results/logs/
+
+# Phase I
+make asm        # assemble programs/*.s (+ assembler self-test, 29 encodings)
+make unit       # unit tests: addr_decoder, instr_mem, data_mem, harvard_mem
+make harvard    # every program on the ideal Harvard system
+make vn         # every program on the ideal shared-memory baseline
+make compare    # both side by side (comparison table)
+make figure     # Phase I waveform figure for the report
+
+# Phase II
+make iss        # golden-model self-test
+make cache      # cache unit test (41 checks)
+make mutate     # shows tb_cache fails on three deliberately broken RTL copies
+make system     # every program on all five systems (L = 1, 8; write buffer off/on)
+make sweep      # 528 runs: programs x L {1..16} x lines {1..32} x wbuf, checked against the ISS
+make figure2    # Phase II waveform figure from a real VCD
+make waves2     # open that VCD
+
+# synthesis and report (from the repository root)
+sh results/synth2/run_synth.sh    # Yosys area of every Phase II design
+sh results/synth2/loop_demo.sh    # timing-rule demonstration (logic loops)
+cd report && tectonic main.tex
 ```
 
-The report compiles with pdfLaTeX + BibTeX (Overleaf, TeX Live, MiKTeX), or locally with
-`cd report && tectonic main.tex`. Both produce Times text, as IEEE requires. All figures are TikZ sources in `report/figures/`.
-
-Every testbench is self-checking and ends with `PASS` or `FAIL (n errors)`. Logs are written to
-`results/logs/`.
+Every testbench is self-checking and ends with `PASS` or `FAIL`.
 
 ## Repository layout
 
 ```
-rtl/mem/        instr_mem, data_mem, addr_decoder, rw_ctrl, harvard_mem
+rtl/mem/        instr_mem, data_mem, addr_decoder, rw_ctrl, harvard_mem   (Phase I)
+                cache, main_mem                                           (Phase II)
 rtl/core/       pc_reg, regfile, alu, imm_gen, control, cpu_core
-rtl/harvard_top.v
-rtl/common/     perf_counters
-rtl/baseline/   shared_mem, cpu_core_vn, vn_top
-tb/             unit, system and comparison testbenches
-programs/       basic, array_sum, memcopy, count_loop (.s, .hex, _data.hex)
-tools/asm.py    assembler for the instruction subset
+rtl/common/     perf_counters (Phase I), event_counters, arbiter (Phase II)
+rtl/baseline/   shared_mem, cpu_core_vn, vn_top (Phase I), vnc_top (Phase II)
+rtl/harvard_top.v  ideal Harvard system;  rtl/mh_top.v  modified Harvard system
+tb/             unit, system and comparison testbenches; tb_cache, tb_system (Phase II)
+programs/       basic, array_sum, memcopy, count_loop, bubble_sort, subroutine, transpose, isa_test
+tools/          asm.py, iss.py (golden model), sweep.py, area_table.py, vcd2tikz.py, mutate_cache.sh
 sim/Makefile    build and run targets
-results/        comparison table, simulation and synthesis logs, GTKWave screenshots (results/waves/)
-results/fmax/   ECP5 place-and-route Fmax scripts (run_fmax.sh)
-report/         IEEE-format report (LaTeX source, TikZ figures, PDF)
-video/          video script and link
+results/        Phase I comparison, synth, fmax; phase2/ (sweep CSV, summary), synth2/ (area), logs/
+report/         final IEEE report: main.tex + sections/ (one file per owner), figures/, data/ (generated)
+docs/           Phase II work split and interview preparation
 ```
 
 ## Results
 
-Measured by `make compare`; full table and discussion in [results/comparison.md](results/comparison.md).
+### Phase I (ideal memories)
 
 | Program | LW/SW % | Harvard CPI | Baseline CPI | Speed-up |
 |---|---|---|---|---|
@@ -102,31 +131,47 @@ Measured by `make compare`; full table and discussion in [results/comparison.md]
 | memcopy    | 31.5% | 1.00 | 1.31 | 1.31x |
 | count_loop |  1.6% | 1.00 | 1.02 | 1.02x |
 
-Maximum clock frequency after place and route (Lattice ECP5, Yosys + nextpnr, `sh results/fmax/run_fmax.sh`):
-**Harvard 43.62 MHz, baseline 37.36 MHz**, so in execution time (cycles / Fmax) the Harvard
-design is 1.19x-1.60x faster. Details and method in [results/comparison.md](results/comparison.md).
+Phase I Fmax (Lattice ECP5): Harvard 43.62 MHz, baseline 37.36 MHz. Details in
+[results/comparison.md](results/comparison.md).
 
-### Waveforms (GTKWave)
+### Phase II (memory hierarchy)
 
-Run `make waves PROG=memcopy` in `sim/` for an interactive view.
+Suite CPI over the eight programs, 4-word lines, 8 lines per split cache (16 unified), write
+buffer on. Generated by `make sweep`; full tables in
+[results/phase2/summary.md](results/phase2/summary.md).
 
-- `memcopy` on both designs, 0-190 ns (`gtkwave build/tb_compare_memcopy.vcd waves.gtkw` in `sim/`):
-  Harvard raises `d_re`/`d_we` in the same cycle as the fetch; the baseline spends an extra cycle
-  with `state`/`m_is_data` = 1 for every LW/SW.
+| Latency L | Ideal Harvard | Modified Harvard | Unified cache | No cache |
+|---|---|---|---|---|
+| 1  | 1.000 | 1.055 | 1.393 | 1.238 |
+| 2  | 1.000 | 1.115 | 1.558 | 2.472 |
+| 4  | 1.000 | 1.280 | 1.909 | 4.940 |
+| 8  | 1.000 | 1.685 | 2.717 | 9.875 |
+| 16 | 1.000 | 2.687 | 4.535 | 19.747 |
+
+- The split caches win because they keep two accesses per cycle and keep code and data apart.
+  Most unified misses are code/data conflict misses: moving the data from `0x400` to `0x480`
+  improves the unified CPI at L = 8 from 2.72 to 1.87.
+- The unified cache wins when the code is bigger than the I-cache (`subroutine`) or when the
+  caches are tiny (1 line each).
+- The write buffer removes 15% of the split design's cycles.
+- The modified Harvard design synthesises with no combinational loop. Area is in
+  [results/synth2/area.md](results/synth2/area.md).
+
+### Waveforms
+
+- Phase I (`make waves PROG=memcopy`): Harvard raises `d_re`/`d_we` in the same cycle as the fetch; the
+  baseline spends an extra cycle with `state` = MEM for every LW/SW.
 
   ![GTKWave: memcopy, Harvard vs baseline](results/waves/gtkwave_memcopy_first_load.png)
-
-- Data-side memory control on Harvard, `basic`, 65-185 ns (`gtkwave build/tb_harvard_top_basic.vcd memctrl.gtkw`):
-  SW/LW to RAM (`sel_ram`, `ram_we`); SW and LW to the invalid address `0x808` raise
-  `addr_fault` and `d_fault` while `ram_we` stays 0 and the load returns 0; SW to `0x400`
-  selects `out_port` (`sel_io`, `io_we`).
+- Phase I data-side control (`basic`): SW/LW to the invalid address `0x808` raise
+  `addr_fault`/`d_fault` while `ram_we` stays 0.
 
   ![GTKWave: address decoding and fault detection](results/waves/gtkwave_basic_memctrl.png)
+- Phase II (`make waves2`): `memcopy` on the modified Harvard system, L = 4. The report's Fig. 6
+  shows an I-miss, a D-miss, a buffered store draining while the core runs, and an I-miss that
+  waits for the drain (no pre-emption).
 
 ## Report and video
 
-- Report PDF: [report/main.pdf](report/main.pdf)
-- Prototype Video: [Google Drive Folder](https://drive.google.com/drive/folders/1gFUfU14wTAQAbcvC8pDPiQS0-IFScr1h?usp=drive_link)
-
-
-
+- Final report: [report/main.pdf](report/main.pdf); Phase I report: [report/phase1/main_phase1.pdf](report/phase1/main_phase1.pdf)
+- Phase I prototype video: [Google Drive Folder](https://drive.google.com/drive/folders/1gFUfU14wTAQAbcvC8pDPiQS0-IFScr1h?usp=drive_link)

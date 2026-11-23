@@ -1,0 +1,40 @@
+% Phase II block diagrams: (a) modified Harvard (mh_top), (b) single bus (vnc_top)
+\begin{tikzpicture}[
+    font=\footnotesize,
+    blk/.style={draw, thick, rounded corners=2pt, minimum height=8mm, align=center, fill=white},
+    mem/.style={blk, fill=gray!12},
+    cac/.style={blk, fill=blue!8},
+    arr/.style={-{Stealth[length=2mm]}, thick},
+    lbl/.style={font=\scriptsize\ttfamily, inner sep=1.5pt}]
+  % ---------------- (a) modified Harvard ----------------
+  \node[blk, minimum width=18mm, minimum height=30mm] (core) at (0,0) {\sig{cpu\_core}\\single\\cycle};
+  \node[cac, minimum width=18mm, minimum height=10mm] (ic) at (4.0,0.85) {I-cache\\$N$ lines};
+  \node[blk, minimum width=16mm, minimum height=10mm] (dec) at (3.2,-0.85) {decoder\\\sig{rw\_ctrl}};
+  \node[cac, minimum width=17mm, minimum height=12mm] (dc) at (5.7,-0.85) {D-cache\\$N$ lines\\+ wbuf};
+  \node[blk, minimum width=15mm, minimum height=30mm] (arb) at (8.2,0) {arbiter\\I $>$ D\\no pre-\\emption};
+  \node[mem, minimum width=17mm, minimum height=30mm] (mm) at (10.8,0) {\sig{main\_mem}\\code +\\data\\latency $L$};
+  \node[blk, minimum width=14mm, minimum height=6mm, font=\scriptsize] (io) at (3.2,-2.3) {\sig{out\_port}};
+  \draw[arr] (0.9,1.10) -- node[lbl, above] {i\_addr} (3.1,1.10);
+  \draw[arr] (3.1,0.60) -- node[lbl, below] {i\_ready} (0.9,0.60);
+  \draw[arr] (0.9,-0.60) -- node[lbl, above] {d\_addr} (2.4,-0.60);
+  \draw[arr] (2.4,-1.10) -- node[lbl, below] {d\_ready} (0.9,-1.10);
+  \draw[arr] (dec.east) -- node[lbl, above] {RAM} (dc.west);
+  \draw[arr] (dec.south) -- node[lbl, right] {IO} (io.north);
+  \draw[arr] (ic.east) -- node[lbl, above] {I} (ic.east -| arb.west);
+  \draw[arr] (dc.east) -- node[lbl, above] {D} (dc.east -| arb.west);
+  \draw[arr, <->] (arb.east) -- node[lbl, above=3pt] {1 port} (mm.west);
+  \node[font=\small\bfseries, anchor=west] at (-0.9,1.95) {(a) Modified Harvard (\sig{mh\_top})};
+  % ---------------- (b) single bus ----------------
+  \begin{scope}[yshift=-4.6cm]
+    \node[blk, minimum width=18mm, minimum height=18mm] (vcore) at (0,0) {\sig{cpu\_core\_vn}\\FETCH /\\MEM};
+    \node[blk, minimum width=16mm] (vdec) at (3.4,0) {decoder};
+    \node[cac, minimum width=24mm, minimum height=12mm] (uc) at (7.0,0) {unified cache\\$2N$ lines + wbuf\\(or uncached)};
+    \node[mem, minimum width=17mm, minimum height=18mm] (vmm) at (10.8,0) {\sig{main\_mem}\\code +\\data, $L$};
+    \node[blk, minimum width=14mm, minimum height=6mm, font=\scriptsize] (vio) at (3.4,-1.4) {\sig{out\_port}};
+    \draw[arr, <->] (vcore.east) -- node[lbl, above] {m\_addr} node[lbl, below] {one bus} (vdec.west);
+    \draw[arr, <->] (vdec.east) -- node[lbl, above] {code, RAM} (uc.west);
+    \draw[arr] (vdec.south) -- node[lbl, right] {IO} (vio.north);
+    \draw[arr, <->] (uc.east) -- node[lbl, above=3pt] {1 port} (vmm.west);
+    \node[font=\small\bfseries, anchor=west] at (-0.9,1.35) {(b) Single bus: unified cache or no cache (\sig{vnc\_top})};
+  \end{scope}
+\end{tikzpicture}

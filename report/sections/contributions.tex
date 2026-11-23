@@ -1,0 +1,74 @@
+% Owner: Anshika (Member 2); each member checks their own row and paragraph.
+%=====================================================================
+\section{Individual Contributions}
+%=====================================================================
+Each member worked on their own branch and merged into \sig{main} through pull requests. The
+repository's commit history shows the split in Table~\ref{tab:contrib}. Phase~I branches were
+\sig{m1-memory} to \sig{m4-verification}. The Phase~II branches and the order in which they
+were merged are listed in \sig{docs/phase2\_work\_split.md}. Phase~II was carried out by four
+members.
+
+\begin{table*}[t]
+  \caption{Individual contributions}
+  \label{tab:contrib}
+  \centering
+  \footnotesize
+  \begin{tabular}{@{}l>{\raggedright}p{5.6cm}>{\raggedright\arraybackslash}p{8.4cm}@{}}
+    \toprule
+    Member & Phase I & Phase II \\
+    \midrule
+    Yashpal   & Harvard memory: \sig{instr\_mem}, \sig{data\_mem}, \sig{addr\_decoder},
+                \sig{rw\_ctrl}, \sig{harvard\_mem}
+              & Reusable cache (\sig{cache}: direct-mapped, write-through, no-write-allocate,
+                write buffer, uncached mode) and shared memory \sig{main\_mem}; report sections
+                on caches (Literature Review) and on the cache and memory (Proposed Solution);
+                cache figure \\
+    Anshika   & Processor and integration: \sig{pc\_reg}, \sig{regfile}, \sig{alu},
+                \sig{imm\_gen}, \sig{control}, \sig{cpu\_core}, \sig{harvard\_top}; repository
+                and PR merges
+              & Instruction-set extension and stall interface of \sig{cpu\_core}; modified
+                Harvard top \sig{mh\_top}; timing rules; report frame, abstract, architecture
+                section, Phase~II block diagram, conclusion, contributions; README; PR reviews
+                and merges \\
+    Ankit     & Baseline and metrics: \sig{perf\_counters}, \sig{shared\_mem},
+                \sig{cpu\_core\_vn}, \sig{vn\_top}; comparison; Yosys synthesis; ECP5 Fmax
+              & Extension and stall interface of \sig{cpu\_core\_vn}; \sig{arbiter},
+                \sig{event\_counters}, single-bus top \sig{vnc\_top}; Phase~II synthesis,
+                area table and loop demonstration; report sections on architectures, the
+                arbiter, Phase~I results, split vs unified, area and limitations \\
+    Samriddhi & Verification: assembler, four programs, unit/system/comparison testbenches,
+                \sig{Makefile}, waveform tool
+              & Assembler extension, golden-model ISS, four new programs, \sig{tb\_cache},
+                \sig{tb\_system}, parameter sweep, Phase~II build targets and waveform figure;
+                report sections on verification, timing behaviour, CPI vs latency and the
+                write buffer \\
+    Ayush     & IEEE report and figures, video script and editing, README and documentation
+              & --- \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\textbf{Yashpal} built the Phase~I Harvard memory subsystem. In Phase~II he designed the
+reusable cache module and its hit, refill, write-through and write-buffer logic, so that one
+module serves as I-cache, D-cache, unified cache and uncached path. He also built the
+fixed-latency shared memory with its request/ready handshake.
+
+\textbf{Anshika} built the Phase~I single-cycle processor and set up the repository. In
+Phase~II she added the thirteen new instructions and the \sig{i\_ready}/\sig{d\_ready} stall
+interface to \sig{cpu\_core}, proved that Phase~I timing was unchanged, integrated the modified
+Harvard top, and enforced the timing rules. She also assembled this report and the README and
+merged the other members' pull requests.
+
+\textbf{Ankit} built the Phase~I baseline, the counters and the synthesis and Fmax flow. In
+Phase~II he extended the single-bus core with the same instructions and an \sig{m\_ready}
+stall, and wrote the arbiter, the event counters and the single-bus top for the unified and
+no-cache systems. He synthesised every design, explained the logic-loop warnings, and wrote the
+split-versus-unified analysis.
+
+\textbf{Samriddhi} built the Phase~I verification flow. In Phase~II she extended the assembler,
+wrote the independent instruction-set simulator used as the golden model, the four new
+benchmarks, the cache unit test, the five-system testbench and the sweep that cross-checks
+every RTL miss count, and generated all plots and the Phase~II waveform from simulation data.
+
+\textbf{Ayush} wrote the Phase~I report and its figures, produced the prototype video and
+maintained the Phase~I documentation. He did not take part in Phase~II.
