@@ -1,0 +1,36 @@
+% Organisation of the reusable direct-mapped cache (rtl/mem/cache.v)
+\begin{tikzpicture}[
+    font=\footnotesize,
+    fld/.style={draw, thick, minimum height=6mm, align=center, inner sep=2pt},
+    blk/.style={draw, thick, rounded corners=2pt, minimum height=7mm, align=center, fill=white},
+    arr/.style={-{Stealth[length=2mm]}, thick}]
+  % address fields
+  \node[fld, minimum width=22mm, fill=orange!20] (tag) at (0,0) {tag};
+  \node[fld, minimum width=14mm, fill=green!20, right=0mm of tag] (idx) {index};
+  \node[fld, minimum width=12mm, fill=blue!15, right=0mm of idx] (off) {offset};
+  \node[fld, minimum width=7mm, right=0mm of off] (bb) {00};
+  \node[anchor=south, font=\scriptsize] at (1.8,0.35) {byte address (low \sig{ABITS} bits)};
+  % arrays
+  \node[blk, minimum width=9mm, minimum height=16mm] (v) at (-0.2,-2.0) {V};
+  \node[blk, minimum width=14mm, minimum height=16mm, right=1mm of v] (t) {tags};
+  \node[blk, minimum width=30mm, minimum height=16mm, right=1mm of t] (d) {lines\\$N \times W$ words};
+  \draw[arr] (idx.south) -- ++(0,-0.45) -| (t.north);
+  \draw[arr] (idx.south) ++(0,-0.45) -| (d.north);
+  \draw[arr] (idx.south) ++(0,-0.45) -| (v.north);
+  \node[blk, minimum width=10mm] (cmp) at (0.5,-3.65) {$=$};
+  \draw[arr] (t.south) -- (cmp.north -| t.south) -- (cmp.east);
+  \draw[arr] (tag.west) -- ++(-0.35,0) |- (cmp.west);
+  \node[blk, minimum width=8mm] (and) at (-0.65,-4.5) {\&};
+  \draw[arr] (v.south) -- (and.north);
+  \draw[arr] (cmp.south) |- (and.east);
+  \node[anchor=north, font=\scriptsize\ttfamily] at (and.south) {hit};
+  \node[blk, minimum width=12mm] (mux) at (3.1,-3.65) {word\\select};
+  \draw[arr] (d.south -| mux.north) -- (mux.north);
+  \draw[arr] (off.south) -- ++(0,-0.25) -| (5.25,-3.65) -- (mux.east);
+  \node[anchor=north, font=\scriptsize\ttfamily] at (mux.south) {rdata};
+  % write buffer and memory side
+  \node[blk, minimum width=18mm, fill=blue!8] (wb) at (7.4,-0.55) {write buffer\\(1 entry)};
+  \node[blk, minimum width=18mm, fill=gray!12] (mp) at (7.4,-2.0) {memory port\\req / ready};
+  \draw[arr] (wb) -- node[right, font=\scriptsize, align=left] {drains\\first} (mp);
+  \draw[arr] (mp.west) -- node[above, font=\scriptsize] {refill} (d.east |- mp.west);
+\end{tikzpicture}

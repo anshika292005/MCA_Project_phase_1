@@ -1,0 +1,43 @@
+% Owner: Yashpal (Member 1)
+\subsection{Reusable cache}
+One module, \sig{cache}, serves as the I-cache, the D-cache and the unified cache
+(Fig.~\ref{fig:cache}). It is direct-mapped, with \sig{NUM\_LINES} lines of \sig{LINE\_WORDS}
+32-bit words (both powers of two), one valid bit and one tag per line. The fields are computed
+with shifts and masks, so a one-line cache or a one-word line also works. All results use
+4-word lines.
+\begin{itemize}
+  \item \textbf{Read hit:} completes in the same cycle through a combinational array read.
+  \item \textbf{Read miss:} requests the whole line, writes it into the array in the cycle the
+        memory answers, and completes as a hit in the next cycle. The miss penalty is
+        therefore exactly $L$ cycles. A read miss first waits for the write buffer to drain,
+        so the line it fetches already contains any buffered store (no read-after-write
+        hazard).
+  \item \textbf{Writes:} write-through and no-write-allocate. A store hit also updates the
+        word in the line. A store miss leaves the cache unchanged.
+  \item \textbf{Write buffer} (\sig{WBUF}\,=\,1): one entry. A store that finds the buffer
+        empty is offered to memory at once. If memory does not finish it in that cycle, the
+        buffer captures it and keeps the same request asserted, so the latency count simply
+        continues while the core goes on. A store that finds the buffer busy waits until it
+        empties. With $L=1$ the buffer is therefore never used, and a store is never slower
+        than without the buffer. Without the buffer a store waits for memory.
+  \item \textbf{Uncached mode} (\sig{ENABLE}\,=\,0): every read goes to memory and its word is
+        passed straight back. With $L=1$ this is the Phase~I combinational memory.
+\end{itemize}
+The cache also outputs event pulses for refills and write-buffer stalls, which the performance
+counters use.
+
+\begin{figure}[t]
+  \centering
+  \resizebox{0.92\columnwidth}{!}{\input{figures/cache.tex}}
+  \caption{The reusable direct-mapped cache: address fields, valid/tag/line arrays, hit logic,
+  word select, and the one-entry write buffer in front of the memory port.}
+  \label{fig:cache}
+\end{figure}
+
+\subsection{Shared lower-level memory}
+\sig{main\_mem} is a 512-word single-port memory. A requester raises \sig{req} with
+\sig{we}, \sig{addr} and \sig{wdata} and holds them until \sig{ready}, which rises in the $L$-th
+cycle of the request. A read returns the aligned 4-word line that contains \sig{addr}, so a
+refill is one transfer. A write stores one word. With $L=1$, \sig{ready} rises in the same cycle
+as \sig{req}, which is exactly the ideal memory of Phase~I. In synthesis the memory is a black
+box that stands for block RAM or off-chip memory.

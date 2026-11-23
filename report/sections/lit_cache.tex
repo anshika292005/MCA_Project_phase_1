@@ -1,0 +1,35 @@
+% Owner: Yashpal (Member 1)
+\subsection{Caches and the three kinds of miss}
+A cache keeps recently used lines of memory close to the processor, so it relies on temporal
+locality (the same word is used again soon) and spatial locality (its neighbours are used soon)
+\cite{smith1982}. In a direct-mapped cache each line of memory can live in exactly one cache
+line, chosen by the index bits of its address. Hill argues that direct mapping is attractive
+because the hit path is short: there is only one tag to compare and no way to select
+\cite{hill1988}. Hill and Smith divide misses into three classes
+\cite{hill1989,hp_quant}:
+\begin{itemize}
+  \item \emph{compulsory} misses, the first reference to a line;
+  \item \emph{capacity} misses, which a fully associative cache of the same size would also
+        suffer, because the working set does not fit;
+  \item \emph{conflict} misses, caused by two lines that map to the same set evicting each
+        other even though the cache has room.
+\end{itemize}
+Conflict misses are the weak point of direct mapping. Jouppi showed that a small fully
+associative victim cache removes many of them \cite{jouppi1990}. In a unified cache, code and
+data can also conflict with \emph{each other}, which is the main effect we observe in
+Section~\ref{sec:split}.
+
+\subsection{Write policies and write buffers}
+A write-through cache sends every store to the next level. A write-back cache keeps dirty lines
+and writes them back only on eviction. On a write miss, a write-allocate cache fetches the line
+first, while a no-write-allocate (write-around) cache sends the store to memory and leaves the
+cache unchanged \cite{jouppi1993,hp_quant}. Jouppi separates write-hit from write-miss policies,
+compares write-around and write-validate on write misses, and measures the traffic that
+write-through and write-back caches send to the next level \cite{jouppi1993}. Write-through with
+no-write-allocate is the simplest combination, because memory always holds the current data and
+no line ever has to be written back, so we use it here. A write buffer lets the
+processor continue as soon as the store has been accepted, but Skadron and Clark identify three
+ways in which it can still stall the processor: the buffer is full, the buffer competes with a
+cache miss for the next level, or a load needs data that is still in the buffer
+\cite{skadron1997}. Our cache has a one-entry buffer, and all three cases appear in our
+measurements.
